@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('employee_id')->nullable()->constrained('employees')->nullOnDelete();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->tinyInteger('role')->default(3); // 1-Admin, 2-manager, 3-employee
+            $table->tinyInteger('status')->default(1); // 1-active, 0-inactive
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
