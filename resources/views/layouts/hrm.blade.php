@@ -38,6 +38,10 @@
                     <div class="px-4 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                         Quản lý
                     </div>
+                    <a href="{{ route('management.users.index') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('management.users.*') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
+                        <i class="fas fa-users w-5"></i>
+                        <span class="ml-3">Tài khoản</span>
+                    </a>
                     <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 border-transparent">
                         <i class="fas fa-users w-5"></i>
                         <span class="ml-3">Nhân viên</span>
@@ -139,10 +143,19 @@
                             <div class="hidden md:block">
                                 <div class="text-sm font-semibold text-gray-800">{{ Auth::user()->email }}</div>
                                 <div class="text-xs text-gray-500">
-                                    @php
-                                        $roleLabels = [1 => 'Admin', 2 => 'Manager', 3 => 'Employee'];
-                                    @endphp
-                                    {{ $roleLabels[Auth::user()->role] ?? 'User' }}
+                                    @switch(Auth::user()->role)
+                                        @case(\App\Enums\UserRole::ADMIN)
+                                            Admin
+                                            @break
+                                        @case(\App\Enums\UserRole::MANAGER)
+                                            Manager
+                                            @break
+                                        @case(\App\Enums\UserRole::EMPLOYEE)
+                                            Employee
+                                            @break
+                                        @default
+                                            User
+                                    @endswitch
                                 </div>
                             </div>
                         </div>
@@ -161,20 +174,6 @@
 
             <!-- Content -->
             <div class="p-6">
-                @if(session('success'))
-                    <div class="mb-4 flex items-center gap-3 bg-green-50 border-l-4 border-green-500 text-green-700 p-4 rounded-lg">
-                        <i class="fas fa-check-circle text-xl"></i>
-                        <span>{{ session('success') }}</span>
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="mb-4 flex items-center gap-3 bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg">
-                        <i class="fas fa-exclamation-circle text-xl"></i>
-                        <span>{{ session('error') }}</span>
-                    </div>
-                @endif
-
                 @yield('content')
             </div>
         </main>
@@ -182,6 +181,37 @@
 
     <!-- Mobile Sidebar Overlay -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
+
+    <!-- Global Toast Notifications -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2">
+        @if(session('success'))
+            <div class="toast flex items-start gap-3 bg-green-600 text-white shadow rounded-lg p-4" data-type="success">
+                <i class="fas fa-check-circle text-xl"></i>
+                <div class="flex-1 text-sm">{{ session('success') }}</div>
+                <button class="ml-2 text-white/80 hover:text-white" aria-label="Close" data-close>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        @endif
+        @if(session('warning'))
+            <div class="toast flex items-start gap-3 bg-yellow-500 text-white shadow rounded-lg p-4" data-type="warning">
+                <i class="fas fa-exclamation-triangle text-xl"></i>
+                <div class="flex-1 text-sm">{{ session('warning') }}</div>
+                <button class="ml-2 text-white/80 hover:text-white" aria-label="Close" data-close>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="toast flex items-start gap-3 bg-red-600 text-white shadow rounded-lg p-4" data-type="error">
+                <i class="fas fa-exclamation-circle text-xl"></i>
+                <div class="flex-1 text-sm">{{ session('error') }}</div>
+                <button class="ml-2 text-white/80 hover:text-white" aria-label="Close" data-close>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        @endif
+    </div>
 
     <script>
         // Mobile Sidebar Toggle
@@ -197,6 +227,19 @@
         sidebarOverlay?.addEventListener('click', () => {
             sidebar.classList.add('-translate-x-full');
             sidebarOverlay.classList.add('hidden');
+        });
+        // Toasts: auto-dismiss success after 5s; error/warning require manual close
+        const toastContainer = document.getElementById('toast-container');
+        const toasts = toastContainer ? toastContainer.querySelectorAll('.toast') : [];
+        toasts.forEach((toast) => {
+            const type = toast.getAttribute('data-type');
+            const closeBtn = toast.querySelector('[data-close]');
+            closeBtn?.addEventListener('click', () => toast.remove());
+            if (type === 'success' || type === 'info') {
+                setTimeout(() => {
+                    toast.remove();
+                }, 5000);
+            }
         });
     </script>
 

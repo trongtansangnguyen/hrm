@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserRole;
+use App\Enums\UserStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -46,8 +47,16 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'role' => 'integer',
-            'status' => 'integer',
+            'role' => UserRole::class,
+            'status' => UserStatus::class,
         ];
+    }
+
+    /**
+     * Get the employee that owns the user.
+     */
+    public function employee()
+    {
+        return $this->belongsTo(\App\Models\Employee::class, 'employee_id');
     }
 }

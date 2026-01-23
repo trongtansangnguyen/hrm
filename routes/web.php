@@ -2,52 +2,56 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Management\UserController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Authentication Routes
-Route::middleware('guest')->group(function () {
-    // Login
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-    
-    // Forgot Password
-    Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
-    Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
-    
-    // Reset Password
-    Route::get('/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
-    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
-});
-
 Route::middleware('auth')->group(function () {
-    // Logout
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
-    // Change Password
-    Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('password.change');
-    Route::post('/change-password', [AuthController::class, 'changePassword'])->name('password.update.change');
-    
     // Dashboard
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
+    Route::middleware('management')->prefix('management')->group(function () {
+        Route::prefix('users')->group(function () {
+            Route::get('/', [UserController::class, 'index'])->name('management.users.index');
+            Route::get('/create', [UserController::class, 'create'])->name('management.users.create');
+            Route::post('/', [UserController::class, 'store'])->name('management.users.store');
+            Route::get('/{user}', [UserController::class, 'show'])->name('management.users.show');
+            Route::get('/{user}/edit', [UserController::class, 'edit'])->name('management.users.edit');
+            Route::put('/{user}', [UserController::class, 'update'])->name('management.users.update');
+            Route::delete('/{user}', [UserController::class, 'destroy'])->name('management.users.destroy');
+        });
 
-    Route::middleware('admin')->group(function () {
-        // Admin-only routes
-        Route::get('/admin', function () {
-            return view('admin.dashboard');
-        })->name('admin.dashboard');
-    });
+        Route::prefix('employees')->group(function () {
+            // Employee routes can be added here
+        });
 
-    Route::middleware('manager')->group(function () {
-        // Manager-only routes
-        Route::get('/manager', function () {
-            return view('manager.dashboard');
-        })->name('manager.dashboard');
+        Route::prefix('departments')->group(function () {
+            // Department routes can be added here
+        });
+
+        Route::prefix('attendances')->group(function () {
+            // Attendance routes can be added here
+        });
+
+        Route::prefix('leaves')->group(function () {
+            // Leave routes can be added here
+        });
+
+        Route::prefix('allowances')->group(function () {
+            // Allowance routes can be added here
+        });
+
+        Route::prefix('jobs')->group(function () {
+            // Job routes can be added here
+        });
+
+        Route::prefix('logs')->group(function () {
+            // Log routes can be added here
+        });
     });
 });
 

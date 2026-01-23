@@ -15,22 +15,22 @@ class AuthServiceProvider extends ServiceProvider
     {
         // Gate để kiểm tra quyền admin
         Gate::define('is-admin', function ($user) {
-            return $user->role === UserRole::ADMIN->value;
+            return $user->role === UserRole::ADMIN;
         });
 
         // Gate để kiểm tra quyền manager
         Gate::define('is-manager', function ($user) {
-            return $user->role === UserRole::MANAGER->value;
+            return $user->role === UserRole::MANAGER;
         });
 
         // Gate để kiểm tra quyền employee
         Gate::define('is-employee', function ($user) {
-            return $user->role === UserRole::EMPLOYEE->value;
+            return $user->role === UserRole::EMPLOYEE;
         });
 
         // Gate để kiểm tra admin hoặc manager
         Gate::define('is-admin-or-manager', function ($user) {
-            return in_array($user->role, [UserRole::ADMIN->value, UserRole::MANAGER->value]);
+            return in_array($user->role, [UserRole::ADMIN, UserRole::MANAGER]);
         });
     }
 }
