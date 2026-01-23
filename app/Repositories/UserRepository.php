@@ -3,21 +3,27 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use App\Repositories\Core\RepositoryAbstract;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class UserRepository
+class UserRepository extends RepositoryAbstract
 {
-    public function __construct(
-        protected User $model
-    ) {}
+    /**
+     * Get the model instance
+     */
+    protected function getModel(): Model
+    {
+        return new User();
+    }
 
     /**
      * Get all users with pagination and filters
      */
     public function getAllPaginated(array $filters = []): LengthAwarePaginator
     {
-        $query = $this->model->with('employee');
+        $query = $this->newQuery()->with('employee');
 
         $query = $this->applyFilters($query, $filters);
         $query = $this->applySorting($query, $filters);
@@ -32,44 +38,20 @@ class UserRepository
      */
     public function getAll(): Collection
     {
-        return $this->model
+        return $this->newQuery()
             ->with('employee')
             ->latest()
             ->get();
     }
 
     /**
-     * Find user by ID
+     * Find user by ID with relations
      */
     public function findById(int $id): ?User
     {
-        return $this->model
+        return $this->newQuery()
             ->with('employee')
             ->find($id);
-    }
-
-    /**
-     * Create new user
-     */
-    public function create(array $data): User
-    {
-        return $this->model->create($data);
-    }
-
-    /**
-     * Update user
-     */
-    public function update(User $user, array $data): bool
-    {
-        return $user->update($data);
-    }
-
-    /**
-     * Delete user
-     */
-    public function delete(User $user): bool
-    {
-        return $user->delete();
     }
 
     /**
@@ -77,7 +59,7 @@ class UserRepository
      */
     public function emailExists(string $email, ?int $excludeId = null): bool
     {
-        $query = $this->model->where('email', $email);
+        $query = $this->newQuery()->where('email', $email);
         
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
