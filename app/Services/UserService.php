@@ -10,9 +10,13 @@ use Illuminate\Support\Facades\Hash;
 
 class UserService extends ServiceBase
 {
+    protected UserRepository $userRepository;
+
     public function __construct(
-        protected UserRepository $userRepository
-    ) {}
+        UserRepository $userRepository
+    ) {
+        $this->userRepository = $userRepository;
+    }
 
     /**
      * Get paginated users with filters
