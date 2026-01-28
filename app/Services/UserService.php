@@ -5,17 +5,21 @@ namespace App\Services;
 use App\Services\Core\ServiceBase;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
 
 class UserService extends ServiceBase
 {
     protected UserRepository $userRepository;
+    protected LogService $logService;
 
     public function __construct(
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        LogService $logService
     ) {
         $this->userRepository = $userRepository;
+        $this->logService = $logService;
     }
 
     /**
@@ -44,7 +48,29 @@ class UserService extends ServiceBase
             $data['password'] = Hash::make($data['password']);
         }
 
-        return $this->userRepository->create($data);
+        DB::beginTransaction();
+        try {
+            $user = $this->userRepository->create($data);
+            
+            // Log the action
+            $this->logService->logAction(
+                action: 'create_user',
+                tableName: 'users',
+                recordId: $user->id,
+                newValues: [
+                    'email' => $user->email,
+                    'role' => $user->role->value,
+                    'status' => $user->status->value,
+                ]
+            );
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+        return $user;
     }
 
     /**
@@ -52,6 +78,14 @@ class UserService extends ServiceBase
      */
     public function updateUser(int $userId, array $data): bool
     {
+        // Get old values before update
+        $oldUser = $this->userRepository->findById($userId);
+        $oldValues = [
+            'email' => $oldUser->email,
+            'role' => $oldUser->role->value,
+            'status' => $oldUser->status->value,
+        ];
+
         // Hash password if provided
         if (!empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
@@ -59,7 +93,37 @@ class UserService extends ServiceBase
             unset($data['password']);
         }
 
-        return $this->userRepository->update($userId, $data);
+        DB::beginTransaction();
+        try {
+
+            $result = $this->userRepository->update($userId, $data);
+
+            if ($result) {
+                // Get new values after update
+                $newUser = $this->userRepository->findById($userId);
+                $newValues = [
+                    'email' => $newUser->email,
+                    'role' => $newUser->role->value,
+                    'status' => $newUser->status->value,
+                ];
+
+                // Log the action
+                $this->logService->logAction(
+                    action: 'update_user',
+                    tableName: 'users',
+                    recordId: $userId,
+                    oldValues: $oldValues,
+                    newValues: $newValues
+                );
+            }
+            
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+        return $result;
     }
 
     /**
@@ -67,7 +131,35 @@ class UserService extends ServiceBase
      */
     public function deleteUser(int $userId): bool
     {
-        return $this->userRepository->delete($userId);
+        // Get user data before deletion
+        $user = $this->userRepository->findById($userId);
+        $oldValues = [
+            'email' => $user->email,
+            'role' => $user->role->value,
+            'status' => $user->status->value,
+        ];
+
+        DB::beginTransaction();
+        try {
+            $result = $this->userRepository->delete($userId);
+
+            if ($result) {
+                // Log the action
+                $this->logService->logAction(
+                    action: 'delete_user',
+                    tableName: 'users',
+                    recordId: $userId,
+                    oldValues: $oldValues
+                );
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+        return $result;
     }
 
     /**

@@ -13,9 +13,17 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use App\Services\LogService;
 
 class AuthController extends Controller
 {
+    protected LogService $logService;
+
+    public function __construct(LogService $logService)
+    {
+        $this->logService = $logService;
+    }
+
     /**
      * Hiển thị form đăng nhập
      */
@@ -34,6 +42,12 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
+            // Log login action
+            $this->logService->logAction(
+                action: 'login',
+                tableName: 'users',
+                recordId: Auth::id()
+            );
             return redirect()->intended('/dashboard')->with('success', 'Đăng nhập thành công!');
         }
 
