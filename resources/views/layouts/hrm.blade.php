@@ -30,6 +30,10 @@
                         <i class="fas fa-home w-5"></i>
                         <span class="ml-3">Dashboard</span>
                     </a>
+                    <a href="{{ route('logs') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('logs') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
+                        <i class="fas fa-history w-5"></i>
+                        <span class="ml-3">Hoạt động</span>
+                    </a>
                 </div>
 
                 @can('is-admin-or-manager')
