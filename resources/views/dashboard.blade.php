@@ -11,9 +11,9 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600 mb-1">Tổng nhân viên</p>
-                <h3 class="text-3xl font-bold text-gray-800">248</h3>
+                <h3 class="text-3xl font-bold text-gray-800">{{ $data['employee_summary']['total_employees'] ?? 0 }}</h3>
                 <p class="text-xs text-green-600 mt-2">
-                    <i class="fas fa-arrow-up"></i> +12% so với tháng trước
+                    <i class="fas fa-arrow-up"></i> +% so với tháng trước
                 </p>
             </div>
             <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -27,9 +27,9 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600 mb-1">Đang làm việc</p>
-                <h3 class="text-3xl font-bold text-gray-800">235</h3>
+                <h3 class="text-3xl font-bold text-gray-800">{{ $data['employee_summary']['working_employees'] ?? 0 }}</h3>
                 <p class="text-xs text-green-600 mt-2">
-                    <i class="fas fa-check"></i> 94.8% tỷ lệ
+                    <i class="fas fa-check"></i> {{ $data['employee_summary']['working_percentage'] ?? 0 }}% tỷ lệ
                 </p>
             </div>
             <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center">
@@ -43,9 +43,9 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600 mb-1">Nghỉ phép hôm nay</p>
-                <h3 class="text-3xl font-bold text-gray-800">13</h3>
+                <h3 class="text-3xl font-bold text-gray-800">{{ $data['leave_summary']['total_leave_requests_today'] ?? 0 }}</h3>
                 <p class="text-xs text-gray-500 mt-2">
-                    <i class="fas fa-calendar"></i> 5 đã duyệt
+                    <i class="fas fa-calendar"></i> {{ $data['leave_summary']['approved_leave_requests_today'] ?? 0 }} đã duyệt
                 </p>
             </div>
             <div class="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center">
@@ -59,9 +59,9 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600 mb-1">Ứng viên mới</p>
-                <h3 class="text-3xl font-bold text-gray-800">42</h3>
+                <h3 class="text-3xl font-bold text-gray-800">{{ $data['candidate_summary']['new_candidates'] ?? 0 }}</h3>
                 <p class="text-xs text-blue-600 mt-2">
-                    <i class="fas fa-clock"></i> 8 chờ phỏng vấn
+                    <i class="fas fa-clock"></i> {{ $data['candidate_summary']['applied_candidates'] ?? 0 }} chờ phỏng vấn
                 </p>
             </div>
             <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center">
