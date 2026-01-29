@@ -44,7 +44,10 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::prefix('allowances')->group(function () {
-            // Allowance routes can be added here
+        Route::get('/', [App\Http\Controllers\Management\AllowanceController::class, 'index'])->name('management.allowances.index');
+        Route::get('/create', [App\Http\Controllers\Management\AllowanceController::class, 'create'])->name('management.allowances.create');
+        Route::post('/', [App\Http\Controllers\Management\AllowanceController::class, 'store'])->name('management.allowances.store');
+        // Có thể thêm edit, update, delete sau
         });
 
         Route::prefix('jobs')->group(function () {

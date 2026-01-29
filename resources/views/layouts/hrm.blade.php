@@ -89,7 +89,8 @@
                         <i class="fas fa-money-bill-wave w-5"></i>
                         <span class="ml-3">Bảng lương</span>
                     </a>
-                    <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 border-transparent">
+                    <a href="{{ route('management.allowances.index') }}" 
+                    class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('management.allowances.*') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
                         <i class="fas fa-gift w-5"></i>
                         <span class="ml-3">Phụ cấp</span>
                     </a>
