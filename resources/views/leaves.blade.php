@@ -111,9 +111,6 @@
 				<button id="toggle-filters" type="button" class="p-2 rounded-full text-gray-600 hover:bg-gray-100" aria-label="Ẩn/hiện bộ lọc">
 					<i class="fas fa-angle-down"></i>
 				</button>
-				<button id="open-leave-modal" type="button" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
-					<i class="fas fa-plus mr-2"></i> Tạo đơn nghỉ
-				</button>
 			</div>
 		</div>
 
@@ -226,49 +223,7 @@
 	</div>
 </div>
 
-<!-- Modal tạo đơn nghỉ -->
-<div id="leave-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
-	<div class="bg-white rounded-xl shadow-xl w-full max-w-2xl overflow-hidden">
-		<div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-			<div class="text-lg font-semibold text-gray-800">Tạo đơn nghỉ</div>
-			<button id="close-leave-modal" class="text-gray-500 hover:text-gray-700">
-				<i class="fas fa-times"></i>
-			</button>
-		</div>
-		<div class="p-6 space-y-4">
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div>
-					<label class="block text-sm font-medium text-gray-700 mb-1">Loại nghỉ</label>
-					<select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
-						@foreach($leaveTypes as $type)
-							<option value="{{ $type }}">{{ $type }}</option>
-						@endforeach
-					</select>
-				</div>
-				<div>
-					<label class="block text-sm font-medium text-gray-700 mb-1">Người duyệt</label>
-					<input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" placeholder="Nhập email hoặc tên quản lý">
-				</div>
-				<div>
-					<label class="block text-sm font-medium text-gray-700 mb-1">Từ ngày</label>
-					<input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
-				</div>
-				<div>
-					<label class="block text-sm font-medium text-gray-700 mb-1">Đến ngày</label>
-					<input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
-				</div>
-			</div>
-			<div>
-				<label class="block text-sm font-medium text-gray-700 mb-1">Lý do</label>
-				<textarea rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" placeholder="Mô tả ngắn gọn"></textarea>
-			</div>
-			<div class="flex items-center justify-end gap-3">
-				<button type="button" id="cancel-leave-modal" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium">Hủy</button>
-				<button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">Gửi duyệt</button>
-			</div>
-		</div>
-	</div>
-</div>
+
 @endsection
 
 @section('scripts')
@@ -277,11 +232,6 @@
 		const filterContent = document.getElementById('filters-content');
 		const filterToggle = document.getElementById('toggle-filters');
 		const filterStorageKey = 'leaves_filters_collapsed';
-
-		const modal = document.getElementById('leave-modal');
-		const openModalBtn = document.getElementById('open-leave-modal');
-		const closeModalBtn = document.getElementById('close-leave-modal');
-		const cancelModalBtn = document.getElementById('cancel-leave-modal');
 
 		const initCollapsed = localStorage.getItem(filterStorageKey);
 		if (initCollapsed === 'collapsed') {
@@ -292,16 +242,6 @@
 			filterContent?.classList.toggle('hidden');
 			const collapsed = filterContent?.classList.contains('hidden');
 			localStorage.setItem(filterStorageKey, collapsed ? 'collapsed' : 'expanded');
-		});
-
-		const openModal = () => modal?.classList.remove('hidden');
-		const closeModal = () => modal?.classList.add('hidden');
-
-		openModalBtn?.addEventListener('click', openModal);
-		closeModalBtn?.addEventListener('click', closeModal);
-		cancelModalBtn?.addEventListener('click', closeModal);
-		modal?.addEventListener('click', (e) => {
-			if (e.target === modal) closeModal();
 		});
 	});
 </script>

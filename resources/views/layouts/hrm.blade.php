@@ -30,6 +30,10 @@
                         <i class="fas fa-home w-5"></i>
                         <span class="ml-3">Dashboard</span>
                     </a>
+                    <a href="{{ route('logs') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('logs') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
+                        <i class="fas fa-history w-5"></i>
+                        <span class="ml-3">Hoạt động</span>
+                    </a>
                 </div>
 
                 @can('is-admin-or-manager')
@@ -58,6 +62,10 @@
                         <i class="fas fa-user-tie w-5"></i>
                         <span class="ml-3">Ứng viên</span>
                     </a>
+                    <a href="{{ route('leaves') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 border-transparent">
+                        <i class="fas fa-user-tie w-5"></i>
+                        <span class="ml-3">Nghỉ phép</span>
+                    </a>
                 </div>
                 @endcan
 
@@ -70,7 +78,7 @@
                         <i class="fas fa-clock w-5"></i>
                         <span class="ml-3">Điểm danh</span>
                     </a>
-                    <a href="{{ route('leaves') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 border-transparent">
+                    <a href="{{ route('employee-leaves.index') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 border-transparent">
                         <i class="fas fa-calendar-check w-5"></i>
                         <span class="ml-3">Nghỉ phép</span>
                     </a>
@@ -85,7 +93,8 @@
                         <i class="fas fa-money-bill-wave w-5"></i>
                         <span class="ml-3">Bảng lương</span>
                     </a>
-                    <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 border-transparent">
+                    <a href="{{ route('management.allowances.index') }}" 
+                    class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('management.allowances.*') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
                         <i class="fas fa-gift w-5"></i>
                         <span class="ml-3">Phụ cấp</span>
                     </a>
