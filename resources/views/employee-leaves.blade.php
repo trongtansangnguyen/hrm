@@ -31,26 +31,7 @@
         </div>
     @endif
 
-    <!-- Thông tin nhân viên -->
-    @if($employee)
-        <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-blue-600">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-gray-600 mb-1">Nhân viên</p>
-                    <p class="text-lg font-semibold text-gray-800">{{ $employee->first_name }} {{ $employee->last_name }}</p>
-                    <p class="text-sm text-gray-600 mt-1">Mã NV: {{ $employee->employee_code }}</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-sm text-gray-600 mb-1">Phòng ban</p>
-                    <p class="text-lg font-semibold text-gray-800">{{ $employee->department->name ?? 'N/A' }}</p>
-                </div>
-            </div>
-        </div>
-    @else
-        <div class="bg-red-50 border-l-4 border-red-600 rounded-xl p-5">
-            <p class="text-red-800 font-medium">Không tìm thấy thông tin nhân viên. Vui lòng liên hệ quản trị viên.</p>
-        </div>
-    @endif
+   
 
     <!-- Nút tạo đơn -->
     @if($employee)
@@ -86,7 +67,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($leaveRequests as $leave)
                         @php
-                            $meta = $statusColors[$leave->status] ?? $statusColors[1];
+                            $meta = $statusColors[$leave->status->value] ?? $statusColors[1];
                         @endphp
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-4 py-4 text-sm font-medium text-gray-900">Nghỉ phép năm</td>
@@ -143,9 +124,6 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Loại nghỉ <span class="text-red-500">*</span></label>
                     <select name="leave_type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" required>
                         <option value="">-- Chọn loại nghỉ --</option>
-                        @foreach($leaveTypes as $type)
-                            <option value="{{ $type }}">{{ $type }}</option>
-                        @endforeach
                     </select>
                     @error('leave_type')
                         <p class="text-red-600 text-xs mt-1">{{ $message }}</p>

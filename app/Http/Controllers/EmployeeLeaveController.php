@@ -11,7 +11,14 @@ class EmployeeLeaveController extends Controller
 {
     public function index()
     {
-        return view('employee-leaves');
+        $user = Auth::user();
+        $employee = $user?->employee?->load('department');
+
+        $leaveRequests = $employee
+            ? Leave::where('employee_id', $employee->id)->latest()->get()
+            : collect();
+
+        return view('employee-leaves', compact('employee', 'leaveRequests'));
     }
 
     public function store(Request $request)
