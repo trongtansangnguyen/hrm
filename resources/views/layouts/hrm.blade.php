@@ -62,6 +62,10 @@
                         <i class="fas fa-user-tie w-5"></i>
                         <span class="ml-3">Ứng viên</span>
                     </a>
+                    <a href="{{ route('leaves') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 border-transparent">
+                        <i class="fas fa-user-tie w-5"></i>
+                        <span class="ml-3">Nghỉ phép</span>
+                    </a>
                 </div>
                 @endcan
 
@@ -74,7 +78,7 @@
                         <i class="fas fa-clock w-5"></i>
                         <span class="ml-3">Điểm danh</span>
                     </a>
-                    <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 border-transparent">
+                    <a href="{{ route('employee-leaves.index') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 border-transparent">
                         <i class="fas fa-calendar-check w-5"></i>
                         <span class="ml-3">Nghỉ phép</span>
                     </a>

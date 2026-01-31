@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Management\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LeavesController;
 use App\Http\Controllers\LogController;
-
+use App\Http\Controllers\EmployeeLeaveController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -13,8 +14,10 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/leaves', [LeavesController::class, 'index'])->name('leaves');
+    Route::get('/employee-leaves', [EmployeeLeaveController::class, 'index'])->name('employee-leaves.index');
+    Route::post('/employee-leaves', [EmployeeLeaveController::class, 'store'])->name('employee-leaves.store');
     Route::get('/logs', [LogController::class, 'index'])->name('logs');
-
     // Management Routes
     Route::middleware('management')->prefix('management')->group(function () {
         Route::prefix('users')->group(function () {
