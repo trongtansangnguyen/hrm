@@ -3,10 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Management\UserController;
+use App\Http\Controllers\Management\LeaveController as ManagementLeaveController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LeavesController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\EmployeeLeaveController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -17,6 +19,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/leaves', [LeavesController::class, 'index'])->name('leaves');
     Route::get('/employee-leaves', [EmployeeLeaveController::class, 'index'])->name('employee-leaves.index');
     Route::post('/employee-leaves', [EmployeeLeaveController::class, 'store'])->name('employee-leaves.store');
+    Route::delete('/employee-leaves/{leave}', [EmployeeLeaveController::class, 'destroy'])
+        ->name('employee-leaves.destroy');
     Route::get('/logs', [LogController::class, 'index'])->name('logs');
     // Management Routes
     Route::middleware('management')->prefix('management')->group(function () {
@@ -43,7 +47,11 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::prefix('leaves')->group(function () {
-            // Leave routes can be added here
+            Route::get('/', [ManagementLeaveController::class, 'index'])->name('management.leaves.index');
+            Route::patch('/{leave}/approve', [ManagementLeaveController::class, 'approve'])
+                ->name('management.leaves.approve');
+            Route::patch('/{leave}/reject', [ManagementLeaveController::class, 'reject'])
+                ->name('management.leaves.reject');
         });
 
         Route::prefix('allowances')->group(function () {

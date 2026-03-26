@@ -55,7 +55,6 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Loại nghỉ</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Từ ngày</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đến ngày</th>
                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
@@ -70,12 +69,11 @@
                             $meta = $statusColors[$leave->status->value] ?? $statusColors[1];
                         @endphp
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-4 py-4 text-sm font-medium text-gray-900">Nghỉ phép năm</td>
                             <td class="px-4 py-4 text-sm text-gray-700">
-                                {{ \Carbon\Carbon::parse($leave->from_date)->format('d/m/Y') }}
+                                {{ $leave->from_date?->format('d/m/Y') }}
                             </td>
                             <td class="px-4 py-4 text-sm text-gray-700">
-                                {{ \Carbon\Carbon::parse($leave->to_date)->format('d/m/Y') }}
+                                {{ $leave->to_date?->format('d/m/Y') }}
                             </td>
                             <td class="px-4 py-4 text-center">
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full {{ $meta['bg'] }} {{ $meta['text'] }}">
@@ -85,17 +83,25 @@
                             </td>
                             <td class="px-4 py-4 text-sm text-gray-700 max-w-xs truncate">{{ $leave->reason ?? '-' }}</td>
                             <td class="px-4 py-4 text-sm text-gray-500">
-                                {{ \Carbon\Carbon::parse($leave->created_at)->format('d/m/Y H:i') }}
+                                {{ $leave->created_at?->format('d/m/Y H:i') }}
                             </td>
                             <td class="px-4 py-4 text-center text-sm">
-                                <button class="text-blue-600 hover:text-blue-800 transition-colors" title="Xem chi tiết">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+                                @if($leave->status->value === 1)
+                                    <form method="POST" action="{{ route('employee-leaves.destroy', $leave) }}" onsubmit="return confirm('Bạn chắc chắn muốn hủy đơn này?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-800 transition-colors" title="Hủy đơn">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-4 py-10 text-center text-gray-500">
+                            <td colspan="6" class="px-4 py-10 text-center text-gray-500">
                                 <i class="fas fa-inbox text-3xl mb-3 text-gray-300"></i>
                                 <p class="text-base">Bạn chưa tạo đơn nghỉ nào</p>
                                 <p class="text-sm mt-1">Nhấn nút "Tạo đơn nghỉ mới" để bắt đầu</p>
@@ -120,15 +126,6 @@
         <form action="{{ route('employee-leaves.store') }}" method="POST" class="p-6 space-y-4">
             @csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Loại nghỉ <span class="text-red-500">*</span></label>
-                    <select name="leave_type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" required>
-                        <option value="">-- Chọn loại nghỉ --</option>
-                    </select>
-                    @error('leave_type')
-                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Số ngày <span class="text-red-500">*</span></label>
                     <input type="number" id="leave-days" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-gray-100" disabled>
