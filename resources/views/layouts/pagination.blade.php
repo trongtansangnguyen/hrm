@@ -1,3 +1,8 @@
+@php
+    $route = $route ?? request()->url();
+    $filters = $filters ?? request()->except('page');
+@endphp
+
 @if($paginator->hasPages() || $paginator->total() > 0)
     <div class="flex items-center justify-between bg-white px-6 py-3 rounded-lg shadow">
         <div class="text-sm text-gray-700">
@@ -18,10 +23,10 @@
                     id="per_page"
                     onchange="this.form.submit()"
                     class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
-                    <option value="10" {{ ($filters['per_page'] ?? 20) == 10 ? 'selected' : '' }}>10</option>
-                    <option value="20" {{ ($filters['per_page'] ?? 20) == 20 ? 'selected' : '' }}>20</option>
-                    <option value="50" {{ ($filters['per_page'] ?? 20) == 50 ? 'selected' : '' }}>50</option>
-                    <option value="100" {{ ($filters['per_page'] ?? 20) == 100 ? 'selected' : '' }}>100</option>
+                    <option value="10" {{ ($filters['per_page'] ?? $paginator->perPage()) == 10 ? 'selected' : '' }}>10</option>
+                    <option value="20" {{ ($filters['per_page'] ?? $paginator->perPage()) == 20 ? 'selected' : '' }}>20</option>
+                    <option value="50" {{ ($filters['per_page'] ?? $paginator->perPage()) == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ ($filters['per_page'] ?? $paginator->perPage()) == 100 ? 'selected' : '' }}>100</option>
                 </select>
             </form>
             <div class="flex gap-2">

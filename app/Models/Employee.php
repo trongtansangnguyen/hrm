@@ -93,7 +93,7 @@ class Employee extends Model
      */
     public function leaveRequests()
     {
-        return $this->hasMany(LeaveRequest::class);
+        return $this->hasMany(Leave::class);
     }
 
     /**
