@@ -31,14 +31,17 @@
         </div>
     @endif
 
-   
-
-    <!-- Nút tạo đơn -->
-    @if($employee)
+    @if ($canCreateLeaveRequest)
+        <!-- Nút tạo đơn -->
         <div class="flex justify-end">
             <button id="open-leave-modal" type="button" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
                 <i class="fas fa-plus mr-2"></i> Tạo đơn nghỉ mới
             </button>
+        </div>
+    @else
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-3">
+            <i class="fas fa-triangle-exclamation text-amber-600"></i>
+            <p class="text-amber-800 font-medium">Tài khoản chưa liên kết hồ sơ nhân viên, chưa thể tạo đơn nghỉ phép.</p>
         </div>
     @endif
 
@@ -114,56 +117,59 @@
     </div>
 </div>
 
-<!-- Modal tạo đơn nghỉ -->
-<div id="leave-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl overflow-hidden">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-            <div class="text-lg font-semibold text-gray-800">Tạo đơn nghỉ mới</div>
-            <button id="close-leave-modal" class="text-gray-500 hover:text-gray-700 transition-colors">
-                <i class="fas fa-times text-lg"></i>
-            </button>
+@if ($canCreateLeaveRequest)
+    <!-- Modal tạo đơn nghỉ -->
+    <div id="leave-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <div class="text-lg font-semibold text-gray-800">Tạo đơn nghỉ mới</div>
+                <button id="close-leave-modal" class="text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            <form action="{{ route('employee-leaves.store') }}" method="POST" class="p-6 space-y-4">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Từ ngày <span class="text-red-500">*</span></label>
+                        <input type="date" name="from_date" id="from-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" required>
+                        @error('from_date')
+                            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Đến ngày <span class="text-red-500">*</span></label>
+                        <input type="date" name="to_date" id="to-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" required>
+                        @error('to_date')
+                            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Số ngày <span class="text-red-500">*</span></label>
+                        <input type="number" id="leave-days" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-gray-100" disabled>
+                        <p class="text-xs text-gray-500 mt-1">Tự động tính từ ngày từ - đến</p>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Lý do <span class="text-red-500">*</span></label>
+                    <textarea name="reason" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" placeholder="Mô tả lý do xin nghỉ..." required></textarea>
+                    @error('reason')
+                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800 flex gap-2">
+                    <i class="fas fa-info-circle flex-shrink-0 mt-0.5"></i>
+                    <p>Đơn nghỉ của bạn sẽ được gửi tới trưởng phòng để duyệt. Vui lòng điền đầy đủ thông tin.</p>
+                </div>
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <button type="button" id="cancel-leave-modal" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium">Hủy</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">Gửi đơn</button>
+                </div>
+            </form>
         </div>
-        <form action="{{ route('employee-leaves.store') }}" method="POST" class="p-6 space-y-4">
-            @csrf
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Số ngày <span class="text-red-500">*</span></label>
-                    <input type="number" id="leave-days" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-gray-100" disabled>
-                    <p class="text-xs text-gray-500 mt-1">Tự động tính từ ngày từ - đến</p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Từ ngày <span class="text-red-500">*</span></label>
-                    <input type="date" name="from_date" id="from-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" required>
-                    @error('from_date')
-                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Đến ngày <span class="text-red-500">*</span></label>
-                    <input type="date" name="to_date" id="to-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" required>
-                    @error('to_date')
-                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Lý do <span class="text-red-500">*</span></label>
-                <textarea name="reason" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" placeholder="Mô tả lý do xin nghỉ..." required></textarea>
-                @error('reason')
-                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800 flex gap-2">
-                <i class="fas fa-info-circle flex-shrink-0 mt-0.5"></i>
-                <p>Đơn nghỉ của bạn sẽ được gửi tới trưởng phòng để duyệt. Vui lòng điền đầy đủ thông tin.</p>
-            </div>
-            <div class="flex items-center justify-end gap-3 pt-2">
-                <button type="button" id="cancel-leave-modal" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium">Hủy</button>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">Gửi đơn</button>
-            </div>
-        </form>
     </div>
-</div>
+@endif
 @endsection
 
 @section('scripts')

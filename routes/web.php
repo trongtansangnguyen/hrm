@@ -5,9 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Management\UserController;
 use App\Http\Controllers\Management\LeaveController as ManagementLeaveController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\LeavesController;
+use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LogController;
-use App\Http\Controllers\EmployeeLeaveController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -16,10 +15,10 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/leaves', [LeavesController::class, 'index'])->name('leaves');
-    Route::get('/employee-leaves', [EmployeeLeaveController::class, 'index'])->name('employee-leaves.index');
-    Route::post('/employee-leaves', [EmployeeLeaveController::class, 'store'])->name('employee-leaves.store');
-    Route::delete('/employee-leaves/{leave}', [EmployeeLeaveController::class, 'destroy'])
+    Route::get('/leaves', [LeaveController::class, 'index'])->name('leaves');
+    Route::get('/employee-leaves', [LeaveController::class, 'index'])->name('employee-leaves.index');
+    Route::post('/employee-leaves', [LeaveController::class, 'store'])->name('employee-leaves.store');
+    Route::delete('/employee-leaves/{leave}', [LeaveController::class, 'destroy'])
         ->name('employee-leaves.destroy');
     Route::get('/logs', [LogController::class, 'index'])->name('logs');
     // Management Routes
