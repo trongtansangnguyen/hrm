@@ -2,23 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Leave;
 use App\Enums\LeaveRequestStatus;
+use App\Models\Leave;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class EmployeeLeaveController extends Controller
+class LeaveController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
+
         $employee = $user?->employee?->load('department');
 
         $leaveRequests = $employee
             ? Leave::where('employee_id', $employee->id)->latest()->get()
             : collect();
 
-        return view('employee-leaves', compact('employee', 'leaveRequests'));
+        $canCreateLeaveRequest = !empty($employee?->id);
+
+        return view('employee-leaves', compact('employee', 'leaveRequests', 'canCreateLeaveRequest'));
     }
 
     public function store(Request $request)
@@ -26,7 +29,7 @@ class EmployeeLeaveController extends Controller
         $user = Auth::user();
         $employee = $user?->employee;
 
-        if (!$employee) {
+        if (!$employee?->id) {
             return back()->with('error', 'Tài khoản chưa liên kết hồ sơ nhân viên.');
         }
 
