@@ -34,13 +34,11 @@
    
 
     <!-- Nút tạo đơn -->
-    @if($employee)
         <div class="flex justify-end">
             <button id="open-leave-modal" type="button" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
                 <i class="fas fa-plus mr-2"></i> Tạo đơn nghỉ mới
             </button>
         </div>
-    @endif
 
     <!-- Danh sách đơn nghỉ -->
     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -126,11 +124,7 @@
         <form action="{{ route('employee-leaves.store') }}" method="POST" class="p-6 space-y-4">
             @csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Số ngày <span class="text-red-500">*</span></label>
-                    <input type="number" id="leave-days" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-gray-100" disabled>
-                    <p class="text-xs text-gray-500 mt-1">Tự động tính từ ngày từ - đến</p>
-                </div>
+                
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Từ ngày <span class="text-red-500">*</span></label>
                     <input type="date" name="from_date" id="from-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" required>
@@ -144,6 +138,11 @@
                     @error('to_date')
                         <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                     @enderror
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Số ngày <span class="text-red-500">*</span></label>
+                    <input type="number" id="leave-days" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-gray-100" disabled>
+                    <p class="text-xs text-gray-500 mt-1">Tự động tính từ ngày từ - đến</p>
                 </div>
             </div>
             <div>
