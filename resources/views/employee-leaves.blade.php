@@ -13,24 +13,6 @@
 
 @section('content')
 <div class="space-y-6">
-    @if ($message = Session::get('success'))
-        <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
-            <i class="fas fa-check-circle text-green-600"></i>
-            <div>
-                <p class="text-green-800 font-medium">{{ $message }}</p>
-            </div>
-        </div>
-    @endif
-
-    @if ($message = Session::get('error'))
-        <div class="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3">
-            <i class="fas fa-exclamation-circle text-red-600"></i>
-            <div>
-                <p class="text-red-800 font-medium">{{ $message }}</p>
-            </div>
-        </div>
-    @endif
-
     @if ($canCreateLeaveRequest)
         <!-- Nút tạo đơn -->
         <div class="flex justify-end">
@@ -140,7 +122,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Đến ngày <span class="text-red-500">*</span></label>
-                        <input type="date" name="to_date" id="to-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" required>
+                        <input type="date" name="to_date" id="to-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" required disabled>
                         @error('to_date')
                             <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                         @enderror
@@ -183,14 +165,50 @@
         const toDate = document.getElementById('to-date');
         const leaveDays = document.getElementById('leave-days');
 
-        const openModal = () => modal?.classList.remove('hidden');
-        const closeModal = () => modal?.classList.add('hidden');
+        // Lấy ngày hôm nay
+        const today = new Date();
+        const todayString = today.toISOString().split('T')[0];
+
+        const openModal = () => {
+            modal?.classList.remove('hidden');
+            // Set min date cho "Từ ngày" = hôm nay
+            fromDate.min = todayString;
+            // Reset form khi mở modal
+            fromDate.value = '';
+            toDate.value = '';
+            leaveDays.value = '';
+            toDate.disabled = true;
+        };
+        const closeModal = () => {
+            modal?.classList.add('hidden');
+        };
 
         openModalBtn?.addEventListener('click', openModal);
         closeModalBtn?.addEventListener('click', closeModal);
         cancelModalBtn?.addEventListener('click', closeModal);
         modal?.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
+        });
+
+        // Khi chọn "Từ ngày"
+        fromDate?.addEventListener('change', () => {
+            if (fromDate.value) {
+                // Enable "Đến ngày" và set min = ngày sau "Từ ngày"
+                toDate.disabled = false;
+                const fromDateObj = new Date(fromDate.value);
+                fromDateObj.setDate(fromDateObj.getDate() + 1);
+                const nextDayString = fromDateObj.toISOString().split('T')[0];
+                toDate.min = nextDayString;
+                toDate.value = ''; // Reset "Đến ngày"
+                leaveDays.value = '';
+            } else {
+                // Disable "Đến ngày" nếu chưa chọn "Từ ngày"
+                toDate.disabled = true;
+                toDate.value = '';
+                leaveDays.value = '';
+            }
+            // Tính lại số ngày nếu cần
+            calculateDays();
         });
 
         // Tính số ngày nghỉ
@@ -203,7 +221,6 @@
             }
         };
 
-        fromDate?.addEventListener('change', calculateDays);
         toDate?.addEventListener('change', calculateDays);
     });
 </script>

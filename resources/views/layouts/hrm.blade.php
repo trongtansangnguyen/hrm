@@ -46,7 +46,7 @@
                         <i class="fas fa-users w-5"></i>
                         <span class="ml-3">Tài khoản</span>
                     </a>
-                    <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 border-transparent">
+                    <a href="{{ route('management.employees.index') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('management.employees.*') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
                         <i class="fas fa-users w-5"></i>
                         <span class="ml-3">Nhân viên</span>
                     </a>
