@@ -14,9 +14,9 @@ enum UserRole: int
     public function label(): string
     {
         return match($this) {
-            self::ADMIN => 'Admin',
-            self::MANAGER => 'Manager',
-            self::EMPLOYEE => 'Employee',
+            self::ADMIN => 'Quản trị viên',
+            self::MANAGER => 'Quản lý',
+            self::EMPLOYEE => 'Nhân viên',
         };
     }
 

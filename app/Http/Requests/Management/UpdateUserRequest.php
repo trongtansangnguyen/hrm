@@ -27,6 +27,7 @@ class UpdateUserRequest extends FormRequest
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'role' => ['required', 'integer', 'in:1,2,3'],
             'status' => ['required', 'integer', 'in:0,1'],
+            'employee_id' => ['nullable', 'integer', 'exists:employees,id'],
         ];
     }
 
@@ -40,6 +41,7 @@ class UpdateUserRequest extends FormRequest
             'password' => 'mật khẩu',
             'role' => 'vai trò',
             'status' => 'trạng thái',
+            'employee_id' => 'nhân viên',
         ];
     }
 
@@ -58,6 +60,7 @@ class UpdateUserRequest extends FormRequest
             'role.in' => 'Vai trò không hợp lệ.',
             'status.required' => 'Trạng thái là bắt buộc.',
             'status.in' => 'Trạng thái không hợp lệ.',
+            'employee_id.exists' => 'Nhân viên không tồn tại.',
         ];
     }
 }
