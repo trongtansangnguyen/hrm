@@ -20,7 +20,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/employee-leaves', [LeaveController::class, 'store'])->name('employee-leaves.store');
     Route::delete('/employee-leaves/{leave}', [LeaveController::class, 'destroy'])
         ->name('employee-leaves.destroy');
-    Route::get('/logs', [LogController::class, 'index'])->name('logs');
+
+    Route::middleware('management')->group(function () {
+        Route::get('/logs', [LogController::class, 'index'])->name('logs');
+    });
     // Management Routes
     Route::middleware('management')->prefix('management')->group(function () {
         Route::prefix('users')->group(function () {
