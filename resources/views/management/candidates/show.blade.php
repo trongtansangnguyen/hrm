@@ -36,7 +36,7 @@
                 <span class="text-gray-500">Trạng thái:</span>
                 <span class="col-span-2">
                     <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
-                        {{ $candidate->status }}
+                        {{ $candidate->status->label() }}
                     </span>
                 </span>
 

@@ -25,6 +25,10 @@ class Candidate extends Model
         'status' => 'applied',
     ];
 
+    protected $casts = [
+        'status' => \App\Enums\CandidateStatus::class,
+    ];
+
     public function jobPosition()
     {
         return $this->belongsTo(JobPosition::class, 'job_position_id');
