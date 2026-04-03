@@ -13,7 +13,7 @@
         <!-- Sidebar -->
         <aside 
         id="sidebar" 
-        class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 text-white transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 flex flex-col"
+        class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 text-white transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 flex flex-col shadow-xl"
         >
             <!-- Menu -->
             <nav class="flex-1 overflow-y-auto py-4 custom-scrollbar">
@@ -119,17 +119,17 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 md:ml-64 transition-all duration-300">
+        <main class="flex-1 md:ml-64 min-h-screen transition-all duration-300">
             <!-- Header -->
-            <header class="sticky top-0 z-40 bg-white shadow-sm">
-                <div class="flex items-center justify-between px-6 py-4">
+            <header class="sticky top-0 z-40 bg-white shadow-sm w-full">
+                <div class="flex items-center justify-between px-4 md:px-6 py-4">
                     <!-- Mobile Menu Toggle -->
-                    <button id="sidebar-toggle" class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none">
+                    <button id="sidebar-toggle" class="md:hidden p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-lg">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
 
                     <!-- Page Title -->
-                    <h2 class="text-2xl font-bold text-gray-800">
+                    <h2 class="text-lg md:text-2xl font-bold text-gray-800 truncate ml-2 md:ml-0">
                         @yield('page-title', 'Dashboard')
                     </h2>
 
@@ -179,9 +179,6 @@
         </main>
         <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
     </div>
-
-    <!-- Mobile Sidebar Overlay -->
-    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
 
     <!-- Global Toast Notifications -->
     <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2">
