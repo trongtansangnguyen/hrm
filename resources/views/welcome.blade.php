@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HRM System - Human Resource Management</title>
+    <title>Hệ Thống Quản lý Nhân Sự</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -35,10 +35,10 @@
     <section class="text-center py-20 px-4 text-white">
         <div class="max-w-4xl mx-auto">
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                Quản lý Nhân sự Hiện đại
+                HRM System
             </h1>
             <p class="text-lg sm:text-xl mb-10 opacity-90 max-w-2xl mx-auto">
-                Giải pháp quản lý nhân sự toàn diện, giúp doanh nghiệp tối ưu hóa quy trình và nâng cao hiệu suất làm việc
+                Hệ thống quản lý nhân sự hiện đại, giúp bạn dễ dàng tra cứu thông tin, chấm công, quản lý nghỉ phép và nhiều hơn nữa
             </p>
             <div class="flex flex-wrap gap-5 justify-center">
                 @auth
@@ -47,7 +47,7 @@
                     </a>
                 @else
                     <a href="{{ route('login') }}" class="px-10 py-4 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
-                        <i class="fas fa-rocket"></i> Bắt đầu ngay
+                        <i class="fas fa-sign-in-alt"></i> Đăng nhập hệ thống
                     </a>
                 @endauth
             </div>
@@ -58,7 +58,7 @@
     <section class="bg-white py-20 px-4">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-4xl sm:text-5xl font-bold text-center mb-16 text-gray-800">
-                Tính năng nổi bật
+                Các chức năng hỗ trợ
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 <!-- Feature 1 -->
@@ -66,9 +66,9 @@
                     <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-users text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Quản lý nhân viên</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Thông tin nhân viên</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Quản lý thông tin nhân viên, phòng ban, chức vụ một cách dễ dàng và hiệu quả
+                        Tra cứu thông tin cá nhân, thông tin đồng nghiệp, phòng ban và chức vụ dễ dàng
                     </p>
                 </div>
 
@@ -121,9 +121,9 @@
                     <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-user-tie text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Tuyển dụng</h3>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Hồ sơ cá nhân</h3>
                     <p class="text-gray-600 leading-relaxed">
-                        Quản lý ứng viên, vị trí tuyển dụng và quy trình phỏng vấn chuyên nghiệp
+                        Quản lý và cập nhật thông tin cá nhân, hồ sơ nghề nghiệp của bạn một cách tiện lợi
                     </p>
                 </div>
             </div>
@@ -135,20 +135,20 @@
         <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-10 text-center text-white">
                 <div>
-                    <h3 class="text-5xl font-bold mb-3">100%</h3>
-                    <p class="text-lg opacity-90">Miễn phí mã nguồn</p>
+                    <h3 class="text-5xl font-bold mb-3"><i class="fas fa-shield-alt"></i></h3>
+                    <p class="text-lg opacity-90">Bảo mật cao</p>
                 </div>
                 <div>
-                    <h3 class="text-5xl font-bold mb-3">24/7</h3>
-                    <p class="text-lg opacity-90">Hỗ trợ kỹ thuật</p>
+                    <h3 class="text-5xl font-bold mb-3"><i class="fas fa-bolt"></i></h3>
+                    <p class="text-lg opacity-90">Xử lý nhanh chóng</p>
                 </div>
                 <div>
-                    <h3 class="text-5xl font-bold mb-3">∞</h3>
-                    <p class="text-lg opacity-90">Không giới hạn nhân viên</p>
+                    <h3 class="text-5xl font-bold mb-3"><i class="fas fa-mobile-alt"></i></h3>
+                    <p class="text-lg opacity-90">Truy cập mọi lúc</p>
                 </div>
                 <div>
-                    <h3 class="text-5xl font-bold mb-3">⚡</h3>
-                    <p class="text-lg opacity-90">Hiệu suất cao</p>
+                    <h3 class="text-5xl font-bold mb-3"><i class="fas fa-headset"></i></h3>
+                    <p class="text-lg opacity-90">Hỗ trợ IT nội bộ</p>
                 </div>
             </div>
         </div>
@@ -157,16 +157,16 @@
     <!-- Footer -->
     <footer class="bg-black/20 backdrop-blur-md py-10 px-4 text-center text-white">
         <div class="max-w-7xl mx-auto">
-            <p class="mb-4 opacity-80">&copy; 2026 HRM System. Phát triển bởi Laravel Framework</p>
+            <p class="mb-4 opacity-80">&copy; 2026 Hệ thống Quản lý Nhân sự. Bản quyền thuộc về Công ty.</p>
             <div class="flex flex-wrap gap-8 justify-center">
                 <a href="#" class="opacity-80 hover:opacity-100 transition-opacity">
-                    <i class="fas fa-book"></i> Tài liệu
+                    <i class="fas fa-book"></i> Hướng dẫn sử dụng
                 </a>
                 <a href="#" class="opacity-80 hover:opacity-100 transition-opacity">
-                    <i class="fab fa-github"></i> GitHub
+                    <i class="fas fa-question-circle"></i> Hỗ trợ
                 </a>
                 <a href="#" class="opacity-80 hover:opacity-100 transition-opacity">
-                    <i class="fas fa-envelope"></i> Liên hệ
+                    <i class="fas fa-envelope"></i> Liên hệ IT
                 </a>
             </div>
         </div>

@@ -12,9 +12,6 @@
             <div>
                 <p class="text-sm font-medium text-gray-600 mb-1">Tổng nhân viên</p>
                 <h3 class="text-3xl font-bold text-gray-800">{{ $data['employee_summary']['total_employees'] ?? 0 }}</h3>
-                <p class="text-xs text-green-600 mt-2">
-                    <i class="fas fa-arrow-up"></i> +% so với tháng trước
-                </p>
             </div>
             <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
                 <i class="fas fa-users text-2xl text-blue-600"></i>
@@ -45,7 +42,7 @@
                 <p class="text-sm font-medium text-gray-600 mb-1">Nghỉ phép hôm nay</p>
                 <h3 class="text-3xl font-bold text-gray-800">{{ $data['leave_summary']['total_leave_requests_today'] ?? 0 }}</h3>
                 <p class="text-xs text-gray-500 mt-2">
-                    <i class="fas fa-calendar"></i> {{ $data['leave_summary']['approved_leave_requests_today'] ?? 0 }} đã duyệt
+                    <i class="fas fa-calendar"></i> {{ $data['leave_summary']['total_approved_leave_requests_this_month'] ?? 0 }} đã duyệt trong tháng này
                 </p>
             </div>
             <div class="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center">
@@ -165,8 +162,8 @@
         </div>
     </div>
 </div>
-
-<!-- Quick Actions -->
+@can('is-admin-or-manager')
+<!-- Quick Actions For Manager -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
     <button onclick="alert('Chức năng đang phát triển')" class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-all hover:-translate-y-1 text-center group">
         <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-600 transition-colors">
@@ -200,4 +197,5 @@
         <p class="text-xs text-gray-500 mt-2">Xem báo cáo chi tiết</p>
     </button>
 </div>
+@endcan
 @endsection
