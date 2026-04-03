@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Management\UserController;
+use App\Http\Controllers\Management\EmployeeController;
 use App\Http\Controllers\Management\LeaveController as ManagementLeaveController;
 use App\Http\Controllers\Management\AllowanceController;
 use App\Http\Controllers\DashboardController;
@@ -44,7 +45,13 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::prefix('employees')->group(function () {
-            // Employee routes can be added here
+            Route::get('/', [EmployeeController::class, 'index'])->name('management.employees.index');
+            Route::get('/create', [EmployeeController::class, 'create'])->name('management.employees.create');
+            Route::post('/', [EmployeeController::class, 'store'])->name('management.employees.store');
+            Route::get('/{employee}', [EmployeeController::class, 'show'])->name('management.employees.show');
+            Route::get('/{employee}/edit', [EmployeeController::class, 'edit'])->name('management.employees.edit');
+            Route::put('/{employee}', [EmployeeController::class, 'update'])->name('management.employees.update');
+            Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->name('management.employees.destroy');
         });
 
         Route::prefix('departments')->group(function () {
