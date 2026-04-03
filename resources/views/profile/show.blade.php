@@ -19,13 +19,13 @@
                     <label class="block text-sm font-medium text-gray-600 mb-2">Vai trò</label>
                     <p class="text-gray-900 text-lg">
                         @switch($user->role->value)
-                            @case('admin')
+                            @case('1')
                                 <span class="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">Admin</span>
                                 @break
-                            @case('manager')
+                            @case('2')
                                 <span class="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">Quản lý</span>
                                 @break
-                            @case('employee')
+                            @case('3')
                                 <span class="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">Nhân viên</span>
                                 @break
                             @default
