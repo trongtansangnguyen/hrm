@@ -56,6 +56,10 @@
                         <i class="fas fa-briefcase w-5"></i>
                         <span class="ml-3">Vị trí</span>
                     </a>
+                    <a href="{{ route('management.jobbatch.index') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('management.jobbatch.*') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
+                        <i class="fas fa-user-tie w-5"></i>
+                        <span class="ml-3">Tuyển dụng</span>
+                    </a>
                     <a href="{{ route('management.candidates.index') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('management.candidates.*') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
                         <i class="fas fa-user-tie w-5"></i>
                         <span class="ml-3">Ứng viên</span>

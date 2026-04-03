@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\PublicCandidateController;
+use App\Http\Controllers\Management\JobbatchController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -77,6 +78,17 @@ Route::middleware('auth')->group(function () {
             Route::patch('/{leave}/reject', [ManagementLeaveController::class, 'reject'])
                 ->name('management.leaves.reject');
         });
+
+        Route::prefix('jobbatch')->group(function () {
+            Route::get('/', [JobbatchController::class, 'index'])->name('management.jobbatch.index');
+            Route::get('/create', [JobbatchController::class, 'create'])->name('management.jobbatch.create');
+            Route::post('/', [JobbatchController::class, 'store'])->name('management.jobbatch.store');
+            Route::get('/{jobId}', [JobbatchController::class, 'show'])->name('management.jobbatch.show');
+            Route::get('/{jobId}/edit', [JobbatchController::class, 'edit'])->name('management.jobbatch.edit');
+            Route::put('/{jobId}', [JobbatchController::class, 'update'])->name('management.jobbatch.update');
+            Route::delete('/{jobId}', [JobbatchController::class, 'destroy'])->name('management.jobbatch.destroy');
+        });
+
         Route::prefix('candidates')->group(function () {
             Route::get('/', [App\Http\Controllers\Management\CandidateController::class, 'index'])->name('management.candidates.index');
             Route::get('/{candidate}', [App\Http\Controllers\Management\CandidateController::class, 'show'])->name('management.candidates.show');
@@ -87,9 +99,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [AllowanceController::class, 'index'])->name('management.allowances.index');
             Route::get('/create', [AllowanceController::class, 'create'])->name('management.allowances.create');
             Route::post('/', [AllowanceController::class, 'store'])->name('management.allowances.store');
-            Route::get('/{type}/edit', [AllowanceController::class, 'edit'])->name('management.allowances.edit');
-            Route::put('/{type}', [AllowanceController::class, 'update'])->name('management.allowances.update');
-            Route::delete('/{type}', [AllowanceController::class, 'destroy'])->name('management.allowances.destroy');
+            Route::get('/{allowance}/edit', [AllowanceController::class, 'edit'])->name('management.allowances.edit');
+            Route::put('/{allowance}', [AllowanceController::class, 'update'])->name('management.allowances.update');
+            Route::delete('/{allowance}', [AllowanceController::class, 'destroy'])->name('management.allowances.destroy');
             });
 
         Route::prefix('jobs')->group(function () {

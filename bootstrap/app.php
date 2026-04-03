@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => App\Http\Middleware\CheckAdmin::class,
             'manager' => App\Http\Middleware\CheckManager::class,
             'management' => App\Http\Middleware\CheckManagement::class,
+            'check.management' => \App\Http\Middleware\CheckManagement::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

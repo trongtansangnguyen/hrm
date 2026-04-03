@@ -28,8 +28,20 @@
                 <td class="p-3 text-sm text-gray-700 font-medium">{{ $allowance->name }}</td>
                 <td class="p-3 text-sm text-gray-700">{{ number_format($allowance->amount) }} VNĐ</td>
                 <td class="p-3 text-sm">
-                    <button class="text-blue-500 hover:underline mr-2">Sửa</button>
-                    <button class="text-red-500 hover:underline">Xóa</button>
+                    <a href="{{ route('management.allowances.edit', $allowance->id) }}"
+                        class="text-blue-500 hover:underline mr-2">
+                            Sửa
+                        </a>
+                    <form action="{{ route('management.allowances.destroy', $allowance->id) }}"
+                        method="POST"
+                        class="inline"
+                        onsubmit="return confirm('Bạn có chắc muốn xóa?')">
+                        @csrf
+                        @method('DELETE')
+                        <button class="text-red-500 hover:underline">
+                            Xóa
+                        </button>
+                    </form>
                 </td>
             </tr>
             @empty
