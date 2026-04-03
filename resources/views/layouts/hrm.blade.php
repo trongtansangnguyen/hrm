@@ -60,9 +60,10 @@
                     <a href="{{ route('management.leaves.index') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('management.leaves.*') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
                         <i class="fas fa-user-tie w-5"></i>
                         <span class="ml-3">Nghỉ phép</span>
-                    <a href="{{ route('management.allowances.indexs') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('management.allowances.*') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
+                    </a>                                                                                                                        
+                    <a href="{{ route('management.allowances.index') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('management.allowances.*') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
                         <i class="fas fa-list-ul w-5"></i>
-                        <span class="ml-3">Loại phụ cấp</span>
+                        <span class="ml-3">Phụ cấp</span>
                     </a>
                 </div>
                 @endcan
@@ -90,11 +91,6 @@
                     <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 border-transparent">
                         <i class="fas fa-money-bill-wave w-5"></i>
                         <span class="ml-3">Bảng lương</span>
-                    </a>
-                    <a href="{{ route('management.allowances.index') }}" 
-                    class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('management.allowances.*') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
-                        <i class="fas fa-gift w-5"></i>
-                        <span class="ml-3">Phụ cấp</span>
                     </a>
                 </div>
 
@@ -136,12 +132,6 @@
 
                     <!-- User Info -->
                     <div class="flex items-center gap-4">
-                        <!-- Notification -->
-                        <button class="relative text-gray-600 hover:text-gray-900">
-                            <i class="fas fa-bell text-xl"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
-                        </button>
-
                         <!-- User Dropdown -->
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">

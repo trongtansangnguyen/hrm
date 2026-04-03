@@ -1,14 +1,14 @@
 @extends('layouts.hrm')
 
-@section('title', 'Quản lý Phụ cấp')
-@section('page-title', 'Danh sách Phụ cấp')
+@section('title', 'Quản lý Loại Phụ cấp')
+@section('page-title', 'Danh sách Loại Phụ cấp')
 
 @section('content')
 <div class="bg-white rounded-lg shadow-sm p-6">
     <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold text-gray-700">Thông tin phụ cấp nhân viên</h3>
+        <h3 class="text-lg font-semibold text-gray-700">Danh mục loại phụ cấp hệ thống</h3>
         <a href="{{ route('management.allowances.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
-            <i class="fas fa-plus"></i> Thêm mới
+            <i class="fas fa-plus"></i> Thêm loại mới
         </a>
     </div>
 
@@ -16,16 +16,27 @@
         <thead>
             <tr class="bg-gray-50 border-b">
                 <th class="p-3 text-sm font-semibold text-gray-600">ID</th>
-                <th class="p-3 text-sm font-semibold text-gray-600">Nhân viên</th>
-                <th class="p-3 text-sm font-semibold text-gray-600">Loại phụ cấp</th>
-                <th class="p-3 text-sm font-semibold text-gray-600">Số tiền</th>
+                <th class="p-3 text-sm font-semibold text-gray-600">Tên loại</th>
+                <th class="p-3 text-sm font-semibold text-gray-600">Số tiền mặc định</th>
                 <th class="p-3 text-sm font-semibold text-gray-600">Hành động</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td class="p-3 text-sm text-gray-500" colspan="5 text-center">Chưa có dữ liệu hiển thị.</td>
+            @forelse($allowances as $allowance)
+            <tr class="border-b hover:bg-gray-50">
+                <td class="p-3 text-sm text-gray-700">{{ $allowance->id }}</td>
+                <td class="p-3 text-sm text-gray-700 font-medium">{{ $allowance->name }}</td>
+                <td class="p-3 text-sm text-gray-700">{{ number_format($allowance->amount) }} VNĐ</td>
+                <td class="p-3 text-sm">
+                    <button class="text-blue-500 hover:underline mr-2">Sửa</button>
+                    <button class="text-red-500 hover:underline">Xóa</button>
+                </td>
             </tr>
+            @empty
+            <tr>
+                <td class="p-3 text-sm text-gray-500 text-center" colspan="4">Chưa có loại phụ cấp nào được tạo.</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

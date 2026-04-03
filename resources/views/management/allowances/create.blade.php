@@ -25,7 +25,7 @@
         </div>
 
         <div class="mt-6 flex justify-end gap-3">
-            <a href="{{ route('management.allowances.indexs') }}" class="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-50">Hủy</a>
+            <a href="{{ route('management.allowances.index') }}" class="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-50">Hủy</a>
             <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Lưu lại</button>
         </div>
     </form>
