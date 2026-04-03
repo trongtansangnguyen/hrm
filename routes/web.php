@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Management\UserController;
 use App\Http\Controllers\Management\EmployeeController;
+use App\Http\Controllers\Management\DepartmentController;
 use App\Http\Controllers\Management\LeaveController as ManagementLeaveController;
 use App\Http\Controllers\Management\AllowanceController;
 use App\Http\Controllers\DashboardController;
@@ -55,7 +56,13 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::prefix('departments')->group(function () {
-            // Department routes can be added here
+            Route::get('/', [DepartmentController::class, 'index'])->name('management.departments.index');
+            Route::get('/create', [DepartmentController::class, 'create'])->name('management.departments.create');
+            Route::post('/', [DepartmentController::class, 'store'])->name('management.departments.store');
+            Route::get('/{department}', [DepartmentController::class, 'show'])->name('management.departments.show');
+            Route::get('/{department}/edit', [DepartmentController::class, 'edit'])->name('management.departments.edit');
+            Route::put('/{department}', [DepartmentController::class, 'update'])->name('management.departments.update');
+            Route::delete('/{department}', [DepartmentController::class, 'destroy'])->name('management.departments.destroy');
         });
 
         Route::prefix('attendances')->group(function () {
