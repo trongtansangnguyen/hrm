@@ -8,10 +8,16 @@ use App\Http\Controllers\Management\AllowanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\PublicCandidateController;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+         // Trang hiển thị form đăng ký ứng tuyển
+        Route::get('/tuyen-dung', [PublicCandidateController::class, 'create'])->name('public.candidates.create');
+        // Xử lý lưu dữ liệu ứng viên gửi lên
+        Route::post('/tuyen-dung', [PublicCandidateController::class, 'store'])->name('public.candidates.store');
 
 Route::middleware('auth')->group(function () {
     // Dashboard

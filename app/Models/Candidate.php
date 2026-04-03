@@ -12,10 +12,11 @@ class Candidate extends Model
     protected $table = 'candidates';
 
     protected $fillable = [
-        'full_name',
+        'first_name',
+        'last_name',
         'email',
         'phone',
-        'CV_path',
+        'cv_path',
         'job_position_id',
         'status'
     ];
@@ -24,8 +25,8 @@ class Candidate extends Model
         'status' => 'applied',
     ];
 
-    /*public function jobPosition()
+    public function jobPosition()
     {
         return $this->belongsTo(JobPosition::class, 'job_position_id');
-    }*/
+    }
 }

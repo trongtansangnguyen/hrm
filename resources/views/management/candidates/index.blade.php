@@ -7,10 +7,10 @@
 <div class="bg-white rounded-lg shadow-sm p-6">
     <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-semibold text-gray-700">Hồ sơ ứng tuyển</h3>
-        {{-- Nút này có thể dẫn đến form tạo ứng viên thủ công nếu cần --}}
+        {{-- Nút này có thể dẫn đến form tạo ứng viên thủ công nếu cần 
         <button onclick="alert('Chức năng đang phát triển')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
             <i class="fas fa-user-plus"></i> Thêm ứng viên
-        </button>
+        </button>--}}
     </div>
 
     <div class="overflow-x-auto">
@@ -30,13 +30,12 @@
     <tr class="border-b hover:bg-gray-50 transition-colors">
         {{-- 1. Tên Ứng Viên --}}
         <td class="p-3">
-            <div class="text-sm font-medium text-gray-900">{{ $candidate->full_name }}</div>
-            <div class="text-xs text-gray-500">{{ $candidate->phone }}</div>
+            <div class="text-sm font-medium text-gray-900">{{ $candidate->last_name }} {{ $candidate->first_name }}</div>
         </td>
         
         {{-- 2. Vị trí --}}
         <td class="p-3 text-sm text-gray-700">
-            {{ $candidate->jobPosition->name ?? 'N/A' }}
+            {{ $candidate->jobPosition->title ?? 'N/A' }}
         </td>
 
         {{-- 3. Email --}}
@@ -46,8 +45,8 @@
 
         {{-- 4. CV --}}
         <td class="p-3 text-sm">
-            @if($candidate->CV_path)
-                <a href="{{ asset('storage/' . $candidate->CV_path) }}" target="_blank" class="text-blue-500 hover:text-blue-700">
+            @if($candidate->cv_path)
+                <a href="{{ asset('storage/' . $candidate->cv_path) }}" target="_blank" class="text-blue-500 hover:text-blue-700">
                     <i class="fas fa-file-pdf"></i> Xem CV
                 </a>
             @else
@@ -56,23 +55,36 @@
         </td>
 
         {{-- 5. Trạng Thái (Badge) --}}
-        <td class="p-3">
+                <td class="px-6 py-4">
             @php
-                $statusClasses = [
-                    'applied' => 'bg-blue-100 text-blue-700',
-                    'interview' => 'bg-yellow-100 text-yellow-700',
-                    'hired' => 'bg-green-100 text-green-700',
-                    'rejected' => 'bg-red-100 text-red-700',
-                ];
-                $statusLabels = [
-                    'applied' => 'Mới nhận',
-                    'interview' => 'Phỏng vấn',
-                    'hired' => 'Đã tuyển',
-                    'rejected' => 'Đã loại',
-                ];
+                $status = $candidate->status;
+                $class = '';
+                $text = '';
+
+                switch($status) {
+                    case 'hired': // Tuyển dụng
+                    case '3':     // Nếu DB đang lưu số 1 cho Tuyển dụng
+                        $class = 'bg-green-100 text-green-800 border-green-200';
+                        $text = 'Tuyển dụng';
+                        break;
+                    case 'interview': // Phỏng vấn
+                    case '2':
+                        $class = 'bg-yellow-100 text-yellow-800 border-yellow-200';
+                        $text = 'Phỏng vấn';
+                        break;
+                    case 'rejected': // Loại
+                    case '4':
+                        $class = 'bg-red-100 text-red-800 border-red-200';
+                        $text = 'Loại';
+                        break;
+                    default:
+                        $class = 'bg-blue-100 text-blue-800 border-blue-200';
+                        $text = 'Mới nhận';
+                }
             @endphp
-            <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $statusClasses[$candidate->status] ?? 'bg-gray-100' }}">
-                {{ $statusLabels[$candidate->status] ?? $candidate->status }}
+
+            <span class="px-2 py-1 rounded-full border text-xs font-semibold {{ $class }}">
+                {{ $text }}
             </span>
         </td>
 

@@ -17,7 +17,7 @@
             <h4 class="font-semibold text-gray-700 border-l-4 border-blue-500 pl-2">Thông tin cá nhân</h4>
             <div class="grid grid-cols-3 gap-2 text-sm">
                 <span class="text-gray-500">Họ và tên:</span>
-                <span class="col-span-2 font-medium">{{ $candidate->full_name }}</span>
+                <span class="col-span-2 font-medium">{{ $candidate->last_name }} {{ $candidate->first_name }}</span>
                 
                 <span class="text-gray-500">Email:</span>
                 <span class="col-span-2 font-medium">{{ $candidate->email }}</span>
@@ -31,7 +31,7 @@
             <h4 class="font-semibold text-gray-700 border-l-4 border-green-500 pl-2">Vị trí ứng tuyển</h4>
             <div class="grid grid-cols-3 gap-2 text-sm">
                 <span class="text-gray-500">Vị trí:</span>
-                <span class="col-span-2 font-medium">{{ $candidate->jobPosition->name ?? 'N/A' }}</span>
+                <span class="col-span-2 font-medium">{{ $candidate->jobPosition->title ?? 'N/A' }}</span>
                 
                 <span class="text-gray-500">Trạng thái:</span>
                 <span class="col-span-2">
@@ -42,8 +42,8 @@
 
                 <span class="text-gray-500">Hồ sơ CV:</span>
                 <span class="col-span-2">
-                    @if($candidate->CV_path)
-                        <a href="{{ asset('storage/' . $candidate->CV_path) }}" target="_blank" class="text-blue-500 hover:underline">
+                    @if($candidate->cv_path)
+                        <a href="{{ asset('storage/' . $candidate->cv_path) }}" target="_blank" class="text-blue-500 hover:underline">
                             <i class="fas fa-download"></i> Tải xuống CV
                         </a>
                     @else

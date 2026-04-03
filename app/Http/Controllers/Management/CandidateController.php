@@ -21,13 +21,23 @@ class CandidateController extends Controller
     }
 
     public function updateStatus(Request $request, Candidate $candidate)
-    {
-        $request->validate([
-            'status' => 'required|in:applied,interview,hired,rejected'
-        ]);
+{
+    $request->validate([
+        'status' => 'required|in:applied,interview,hired,rejected'
+    ]);
 
-        $candidate->update(['status' => $request->status]);
+    // Ánh xạ chữ sang số để lưu vào DB (Khớp với logic hiển thị của bạn)
+    $statusMap = [
+        'applied'   => 1, // Mới nhận
+        'interview' => 2, // Phỏng vấn
+        'hired'     => 3, // Tuyển dụng
+        'rejected'  => 4  // Loại
+    ];
 
-        return back()->with('success', 'Cập nhật trạng thái ứng viên thành công!');
-    }
+    $candidate->update([
+        'status' => $statusMap[$request->status]
+    ]);
+
+    return back()->with('success', 'Cập nhật trạng thái ứng viên thành công!');
+}
 }

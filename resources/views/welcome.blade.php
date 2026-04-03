@@ -128,15 +128,17 @@
                 </div>
 
                 <!-- Feature 7 -->
-                <div class="text-center p-8 bg-gray-50 rounded-xl hover:-translate-y-3 hover:shadow-2xl transition-all duration-300">
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-user-tie text-white text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Tuyển Dụng Nhân Sự</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Tuyển dụng nhân sự dễ dàng, quản lý hồ sơ ứng viên và theo dõi tiến trình tuyển dụng hiệu quả
-                    </p>
+                <a href="{{ route('public.candidates.create') }}" class="block group cursor-pointer">
+            <div class="text-center p-8 bg-gray-50 rounded-xl hover:-translate-y-3 hover:shadow-2xl transition-all duration-300">
+                <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-user-tie text-white text-3xl"></i>
                 </div>
+                <h3 class="text-2xl font-semibold mb-4 text-gray-800">Tuyển Dụng Nhân Sự</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Tuyển dụng nhân sự dễ dàng, quản lý hồ sơ ứng viên và theo dõi tiến trình tuyển dụng hiệu quả.
+                </p>
+            </div>
+                </a>
             </div>
         </div>
     </section>
