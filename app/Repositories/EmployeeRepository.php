@@ -45,4 +45,17 @@ class EmployeeRepository extends RepositoryAbstract
     {
         return $this->newQuery()->where('status', EmployeeStatus::WORKING)->count();
     }
+    
+    /**
+     * Get all employees have not linked user account yet
+     */
+    public function getAllEmployeesWithoutUserAccount($currentEmployeeId = null)
+    {
+        return $this->newQuery()
+            ->whereDoesntHave('user')
+            ->when($currentEmployeeId, function ($query) use ($currentEmployeeId) {
+                return $query->orWhere('id', $currentEmployeeId);
+            })
+            ->get(['id', 'first_name', 'last_name', 'email']);
+    }
 }

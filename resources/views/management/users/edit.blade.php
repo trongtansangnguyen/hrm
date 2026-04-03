@@ -105,6 +105,31 @@
                 @enderror
             </div>
 
+            <!-- Liên kết thông tin nhân viên -->
+            <div class="mb-6">
+                <label for="employee_id" class="block text-sm font-medium text-gray-700 mb-2">
+                    Liên kết thông tin nhân viên
+                </label>
+                <select 
+                    name="employee_id" 
+                    id="employee_id" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('employee_id') border-red-500 @enderror"
+                >
+                    <option value="">-- Chọn nhân viên / Huỷ liên kết --</option>
+                    @foreach($employeesWithoutAccount as $employee)
+                    @php
+                        $isCurrentLinked = $employee->id == $user->employee_id;
+                    @endphp
+                        <option value="{{ $employee->id }}" {{ old('employee_id', $user->employee_id) == $employee->id ? 'selected' : '' }}>
+                            {{ $employee->last_name }} {{ $employee->first_name }} - {{ $employee->email }} {{ $isCurrentLinked ? '(Đang liên kết)' : '' }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('employee_id')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
             <!-- Action Buttons -->
             <div class="flex items-center justify-end gap-3 mt-8">
                 <a 

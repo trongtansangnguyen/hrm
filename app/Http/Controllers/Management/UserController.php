@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Management;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\UserService;
+use App\Services\EmployeeService;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Http\Requests\Management\StoreUserRequest;
@@ -14,7 +15,8 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function __construct(
-        protected UserService $userService
+        protected UserService $userService,
+        protected EmployeeService $employeeService
     ) {}
 
     /**
@@ -39,8 +41,9 @@ class UserController extends Controller
     {
         $roles = UserRole::cases();
         $statuses = UserStatus::cases();
+        $employeesWithoutAccount = $this->employeeService->getAllEmployeesWithoutUserAccount();
         
-        return view('management.users.create', compact('roles', 'statuses'));
+        return view('management.users.create', compact('roles', 'statuses', 'employeesWithoutAccount'));
     }
 
     /**
@@ -72,8 +75,9 @@ class UserController extends Controller
     {
         $roles = UserRole::cases();
         $statuses = UserStatus::cases();
+        $employeesWithoutAccount = $this->employeeService->getAllEmployeesWithoutUserAccount($user->employee_id);
         
-        return view('management.users.edit', compact('user', 'roles', 'statuses'));
+        return view('management.users.edit', compact('user', 'roles', 'statuses', 'employeesWithoutAccount'));
     }
 
     /**
