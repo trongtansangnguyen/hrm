@@ -22,6 +22,7 @@ class LeaveRepository extends RepositoryAbstract
         return [
             'total_leave_requests_today' => $this->countAllLeaveRequestsToday(),
             'total_approved_leave_requests' => $this->countAllApprovedLeaveRequests(),
+            'total_approved_leave_requests_this_month' => $this->countAllApprovedLeaveRequestsThisMonth(),
         ];
     }
 
@@ -43,6 +44,18 @@ class LeaveRepository extends RepositoryAbstract
     {
         return $this->newQuery()
             ->where('status', LeaveRequestStatus::APPROVED)
+            ->count();
+    }
+
+    /**
+     * Get count of all approved leave requests this month
+     */
+    public function countAllApprovedLeaveRequestsThisMonth(): int
+    {
+        return $this->newQuery()
+            ->where('status', LeaveRequestStatus::APPROVED)
+            ->whereYear('created_at', now()->year)
+            ->whereMonth('created_at', now()->month)
             ->count();
     }
 }

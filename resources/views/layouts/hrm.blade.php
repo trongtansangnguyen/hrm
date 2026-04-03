@@ -12,13 +12,6 @@
     <div class="flex min-h-screen">
         <!-- Sidebar -->
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 text-white transform transition-transform duration-300 ease-in-out lg:translate-x-0">
-            <!-- Logo -->
-            <div class="flex items-center justify-center h-16 bg-gray-800 border-b border-gray-700">
-                <h1 class="text-xl font-bold text-blue-400">
-                    <i class="fas fa-building"></i> HRM System
-                </h1>
-            </div>
-
             <!-- Menu -->
             <nav class="flex-1 overflow-y-auto py-4">
                 <!-- Main Section -->
