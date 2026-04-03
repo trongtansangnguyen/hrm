@@ -55,12 +55,25 @@ Route::middleware('auth')->group(function () {
             Route::patch('/{leave}/reject', [ManagementLeaveController::class, 'reject'])
                 ->name('management.leaves.reject');
         });
+        Route::prefix('candidates')->group(function () {
+            Route::get('/', [App\Http\Controllers\Management\CandidateController::class, 'index'])->name('management.candidates.index');
+            Route::get('/{candidate}', [App\Http\Controllers\Management\CandidateController::class, 'show'])->name('management.candidates.show');
+            Route::patch('/{candidate}/status', [App\Http\Controllers\Management\CandidateController::class, 'updateStatus'])->name('management.candidates.updateStatus');
+        });
 
+        Route::prefix('allowance-types')->group(function () {
+            Route::get('/', [App\Http\Controllers\Management\AllowanceTypeController::class, 'index'])->name('management.allowances.indexs');
+            Route::get('/create', [App\Http\Controllers\Management\AllowanceTypeController::class, 'create'])->name('management.allowances.creates');
+            Route::post('/', [App\Http\Controllers\Management\AllowanceTypeController::class, 'store'])->name('management.allowances.store');
+            Route::get('/{type}/edit', [App\Http\Controllers\Management\AllowanceTypeController::class, 'edit'])->name('management.allowances.edit');
+            Route::put('/{type}', [App\Http\Controllers\Management\AllowanceTypeController::class, 'update'])->name('management.allowances.update');
+            Route::delete('/{type}', [App\Http\Controllers\Management\AllowanceTypeController::class, 'destroy'])->name('management.allowances.destroy');
+            });
         Route::prefix('allowances')->group(function () {
-        Route::get('/', [App\Http\Controllers\Management\AllowanceController::class, 'index'])->name('management.allowances.index');
-        Route::get('/create', [App\Http\Controllers\Management\AllowanceController::class, 'create'])->name('management.allowances.create');
-        Route::post('/', [App\Http\Controllers\Management\AllowanceController::class, 'store'])->name('management.allowances.store');
-        // Có thể thêm edit, update, delete sau
+            Route::get('/', [App\Http\Controllers\Management\AllowanceController::class, 'index'])->name('management.allowances.index');
+            Route::get('/create', [App\Http\Controllers\Management\AllowanceController::class, 'create'])->name('management.allowances.create');
+            Route::post('/', [App\Http\Controllers\Management\AllowanceController::class, 'store'])->name('management.allowances.store');
+            // Có thể thêm edit, update, delete sau
         });
 
         Route::prefix('jobs')->group(function () {
