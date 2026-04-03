@@ -15,4 +15,7 @@ class JobPosition extends Model
     {
         return $this->hasMany(Candidate::class, 'job_position_id');
     }
+    public function department() {
+    return $this->belongsTo(Department::class, 'department_id');
+}
 }
