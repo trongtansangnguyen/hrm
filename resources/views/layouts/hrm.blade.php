@@ -11,9 +11,12 @@
 <body class="bg-gray-100">
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 text-white transform transition-transform duration-300 ease-in-out lg:translate-x-0">
+        <aside 
+        id="sidebar" 
+        class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 text-white transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 flex flex-col"
+        >
             <!-- Menu -->
-            <nav class="flex-1 overflow-y-auto py-4">
+            <nav class="flex-1 overflow-y-auto py-4 custom-scrollbar">
                 <!-- Main Section -->
                 <div class="mb-6">
                     <div class="px-4 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
@@ -116,12 +119,12 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 lg:ml-64">
+        <main class="flex-1 md:ml-64 transition-all duration-300">
             <!-- Header -->
             <header class="sticky top-0 z-40 bg-white shadow-sm">
                 <div class="flex items-center justify-between px-6 py-4">
                     <!-- Mobile Menu Toggle -->
-                    <button id="sidebar-toggle" class="lg:hidden text-gray-600 hover:text-gray-900">
+                    <button id="sidebar-toggle" class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
 
@@ -174,6 +177,7 @@
                 @yield('content')
             </div>
         </main>
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
     </div>
 
     <!-- Mobile Sidebar Overlay -->
@@ -211,20 +215,35 @@
     </div>
 
     <script>
-        // Mobile Sidebar Toggle
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggle = document.getElementById('sidebar-toggle');
-        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
 
-        sidebarToggle?.addEventListener('click', () => {
-            sidebar.classList.toggle('-translate-x-full');
-            sidebarOverlay.classList.toggle('hidden');
-        });
+            const toggleSidebar = () => {
+                sidebar.classList.toggle('-translate-x-full');
+                sidebarOverlay.classList.toggle('hidden');
+                document.body.classList.toggle('overflow-hidden');
+            };
 
-        sidebarOverlay?.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            sidebarOverlay.classList.add('hidden');
+            sidebarToggle?.addEventListener('click', toggleSidebar);
+            sidebarOverlay?.addEventListener('click', toggleSidebar);
+
+            // Xử lý khi xoay màn hình hoặc resize
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 768) {
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebarOverlay.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                } else {
+                    // Nếu đang ở màn hình nhỏ, đảm bảo menu đóng nếu overlay đang ẩn
+                    if (sidebarOverlay.classList.contains('hidden')) {
+                        sidebar.classList.add('-translate-x-full');
+                    }
+                }
+            });
         });
+        
         // Toasts: auto-dismiss success after 5s; error/warning require manual close
         const toastContainer = document.getElementById('toast-container');
         const toasts = toastContainer ? toastContainer.querySelectorAll('.toast') : [];
