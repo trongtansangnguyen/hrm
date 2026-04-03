@@ -1,6 +1,6 @@
 @extends('layouts.hrm')
 
-@section('title', 'Dashboard - HRM System')
+@section('title', 'Dashboard - SGU Tech Hub')
 @section('page-title', 'Dashboard')
 
 @section('content')
@@ -76,89 +76,52 @@
             <h3 class="text-lg font-bold text-gray-800">
                 <i class="fas fa-chart-line text-blue-600"></i> Hoạt động gần đây
             </h3>
-            <button class="text-sm text-blue-600 hover:text-blue-700">Xem tất cả</button>
         </div>
         <div class="space-y-4">
-            <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i class="fas fa-user-plus text-blue-600"></i>
+            @forelse($data['recent_activities'] as $activity)
+                <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 {{ $activity['action'] === 'create' ? 'bg-blue-100' : ($activity['action'] === 'update' ? 'bg-yellow-100' : 'bg-red-100') }}">
+                        <i class="fas {{ $activity['action'] === 'create' ? 'fa-user-plus text-blue-600' : ($activity['action'] === 'update' ? 'fa-edit text-yellow-600' : 'fa-trash text-red-600') }}"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-800">
+                            {{ ucfirst($activity['action']) }} {{ str_replace('_', ' ', $activity['table_name']) }}
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1">{{ $activity['user_name'] }}</p>
+                        <p class="text-xs text-gray-400 mt-1">{{ $activity['created_at']->diffForHumans() }}</p>
+                    </div>
                 </div>
-                <div class="flex-1">
-                    <p class="text-sm font-medium text-gray-800">Nhân viên mới được thêm</p>
-                    <p class="text-xs text-gray-500 mt-1">Nguyễn Văn A đã được thêm vào phòng IT</p>
-                    <p class="text-xs text-gray-400 mt-1">2 giờ trước</p>
+            @empty
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-inbox text-3xl mb-2 opacity-30"></i>
+                    <p>Chưa có hoạt động</p>
                 </div>
-            </div>
-
-            <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i class="fas fa-check text-green-600"></i>
-                </div>
-                <div class="flex-1">
-                    <p class="text-sm font-medium text-gray-800">Đơn nghỉ phép được duyệt</p>
-                    <p class="text-xs text-gray-500 mt-1">Trần Thị B - Nghỉ phép 3 ngày</p>
-                    <p class="text-xs text-gray-400 mt-1">5 giờ trước</p>
-                </div>
-            </div>
-
-            <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i class="fas fa-money-bill-wave text-orange-600"></i>
-                </div>
-                <div class="flex-1">
-                    <p class="text-sm font-medium text-gray-800">Bảng lương tháng 1 đã được tạo</p>
-                    <p class="text-xs text-gray-500 mt-1">235 nhân viên</p>
-                    <p class="text-xs text-gray-400 mt-1">1 ngày trước</p>
-                </div>
-            </div>
+            @endforelse
         </div>
     </div>
 
     <!-- Quick Stats -->
     <div class="bg-white rounded-xl shadow-sm p-6">
         <h3 class="text-lg font-bold text-gray-800 mb-4">
-            <i class="fas fa-chart-pie text-purple-600"></i> Thống kê nhanh
+            <i class="fas fa-chart-pie text-blue-300"></i> Thống kê hoạt động
         </h3>
         <div class="space-y-4">
-            <div>
-                <div class="flex justify-between text-sm mb-2">
-                    <span class="text-gray-600">Phòng IT</span>
-                    <span class="font-semibold text-gray-800">45/50</span>
+            @forelse($data['department_stats'] as $dept)
+                <div>
+                    <div class="flex justify-between text-sm mb-2">
+                        <span class="text-gray-600 font-medium">{{ $dept['name'] }}</span>
+                        <span class="font-semibold text-gray-800">{{ $dept['working_employees'] }}/{{ $dept['total_employees'] }}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full" style="width: {{ $dept['percentage'] }}%"></div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">{{ $dept['percentage'] }}% hoạt động</p>
                 </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-blue-600 h-2 rounded-full" style="width: 90%"></div>
+            @empty
+                <div class="text-center py-8 text-gray-500">
+                    <p>Chưa có phòng ban</p>
                 </div>
-            </div>
-
-            <div>
-                <div class="flex justify-between text-sm mb-2">
-                    <span class="text-gray-600">Phòng Sale</span>
-                    <span class="font-semibold text-gray-800">38/40</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-green-600 h-2 rounded-full" style="width: 95%"></div>
-                </div>
-            </div>
-
-            <div>
-                <div class="flex justify-between text-sm mb-2">
-                    <span class="text-gray-600">Phòng Marketing</span>
-                    <span class="font-semibold text-gray-800">28/35</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-orange-600 h-2 rounded-full" style="width: 80%"></div>
-                </div>
-            </div>
-
-            <div>
-                <div class="flex justify-between text-sm mb-2">
-                    <span class="text-gray-600">Phòng HR</span>
-                    <span class="font-semibold text-gray-800">12/15</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-purple-600 h-2 rounded-full" style="width: 80%"></div>
-                </div>
-            </div>
+            @endforelse
         </div>
     </div>
 </div>

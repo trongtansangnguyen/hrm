@@ -13,13 +13,16 @@ class DepartmentService extends ServiceBase
 {
     protected DepartmentRepository $departmentRepository;
     protected LogService $logService;
+    protected DashboardService $dashboardService;
 
     public function __construct(
         DepartmentRepository $departmentRepository,
-        LogService $logService
+        LogService $logService,
+        DashboardService $dashboardService
     ) {
         $this->departmentRepository = $departmentRepository;
         $this->logService = $logService;
+        $this->dashboardService = $dashboardService;
     }
 
     /**
@@ -56,6 +59,7 @@ class DepartmentService extends ServiceBase
             );
 
             DB::commit();
+            $this->dashboardService->clearDepartmentCache();
             return $department;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -88,6 +92,7 @@ class DepartmentService extends ServiceBase
             );
 
             DB::commit();
+            $this->dashboardService->clearDepartmentCache();
             return $department;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -102,7 +107,7 @@ class DepartmentService extends ServiceBase
     {
         DB::beginTransaction();
         try {
-            $department = $this->departmentRepository->findById($id);
+            $department = $this->departmentRepository->find($id);
             if (!$department) {
                 throw new \Exception("Department not found");
             }
@@ -117,6 +122,7 @@ class DepartmentService extends ServiceBase
 
             $this->departmentRepository->delete($id);
             DB::commit();
+            $this->dashboardService->clearDepartmentCache();
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -129,7 +135,7 @@ class DepartmentService extends ServiceBase
      */
     public function getAllDepartments()
     {
-        return $this->departmentRepository->getModel()
+        return $this->departmentRepository->newQuery()
             ->whereNull('deleted_at')
             ->orderBy('name')
             ->get();

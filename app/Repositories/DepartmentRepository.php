@@ -7,6 +7,7 @@ use App\Models\Department;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Enums\EmployeeStatus;
 
 class DepartmentRepository extends RepositoryAbstract
 {
@@ -86,5 +87,31 @@ class DepartmentRepository extends RepositoryAbstract
 
         return $query;
     }
-}
 
+    /**
+     * Get department statistics with employee counts
+     */
+    public function getDepartmentStats(): array
+    {
+        return $this->newQuery()
+            ->withCount('employees')
+            ->get()
+            ->map(function ($department) {
+                $totalEmployees = $department->employees_count;
+                $workingEmployees = $department->employees()
+                    ->where('status', EmployeeStatus::ON_DUTY)
+                    ->count();
+                $capacity = max(1, $totalEmployees); // Avoid division by zero
+                $percentage = min(100, round(($workingEmployees / $capacity) * 100));
+
+                return [
+                    'id' => $department->id,
+                    'name' => $department->name,
+                    'total_employees' => $totalEmployees,
+                    'working_employees' => $workingEmployees,
+                    'percentage' => $percentage,
+                ];
+            })
+            ->toArray();
+    }
+}

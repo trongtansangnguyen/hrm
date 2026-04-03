@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'HRM System')</title>
+    <title>@yield('title', 'SGU Tech Hub')</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @yield('styles')
@@ -97,18 +97,14 @@
                     </a>
                 </div>
 
-                <!-- Hệ thống Section -->
+                <!-- Cá nhân Section -->
                 <div class="mb-6">
                     <div class="px-4 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                        Hệ thống
+                        Tài khoản
                     </div>
-                    <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 border-transparent">
+                    <a href="{{ route('profile.show') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('profile.show') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
                         <i class="fas fa-user-shield w-5"></i>
-                        <span class="ml-3">Người dùng</span>
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 border-transparent">
-                        <i class="fas fa-history w-5"></i>
-                        <span class="ml-3">Nhật ký</span>
+                        <span class="ml-3">Thông tin cá nhân</span>
                     </a>
                     <a href="{{ route('password.change') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors border-l-4 {{ request()->routeIs('password.change') ? 'border-blue-500 bg-gray-800 text-white' : 'border-transparent' }}">
                         <i class="fas fa-key w-5"></i>
@@ -137,7 +133,7 @@
                     <div class="flex items-center gap-4">
                         <!-- User Dropdown -->
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold">
                                 {{ strtoupper(substr(Auth::user()->email, 0, 1)) }}
                             </div>
                             <div class="hidden md:block">

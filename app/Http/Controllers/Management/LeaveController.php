@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Management;
 use App\Enums\LeaveRequestStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Leave;
+use App\Services\DashboardService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LeaveController extends Controller
 {
+    public function __construct(
+        protected DashboardService $dashboardService
+    ) {}
+
     public function index(Request $request)
     {
         $filters = $request->only(['search', 'status', 'from_date', 'to_date']);
@@ -66,6 +71,7 @@ class LeaveController extends Controller
             'status' => LeaveRequestStatus::APPROVED,
             'approved_by' => Auth::id(),
         ]);
+        $this->dashboardService->clearLeaveCache();
 
         return back()->with('success', 'Đã duyệt đơn nghỉ phép.');
     }
@@ -80,6 +86,7 @@ class LeaveController extends Controller
             'status' => LeaveRequestStatus::REJECTED,
             'approved_by' => Auth::id(),
         ]);
+        $this->dashboardService->clearLeaveCache();
 
         return back()->with('success', 'Đã từ chối đơn nghỉ phép.');
     }

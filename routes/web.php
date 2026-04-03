@@ -24,6 +24,7 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
     Route::get('/leaves', [LeaveController::class, 'index'])->name('leaves');
     Route::get('/employee-leaves', [LeaveController::class, 'index'])->name('employee-leaves.index');
     Route::post('/employee-leaves', [LeaveController::class, 'store'])->name('employee-leaves.store');

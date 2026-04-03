@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Enums\LeaveRequestStatus;
 use App\Models\Leave;
+use App\Services\DashboardService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LeaveController extends Controller
 {
+    public function __construct(
+        protected DashboardService $dashboardService
+    ) {}
+
     public function index()
     {
         $user = Auth::user();
@@ -64,6 +69,7 @@ class LeaveController extends Controller
             'reason' => $validated['reason'],
             'status' => LeaveRequestStatus::PENDING,
         ]);
+        $this->dashboardService->clearLeaveCache();
 
         return redirect()
             ->route('employee-leaves.index')
@@ -83,6 +89,7 @@ class LeaveController extends Controller
         }
 
         $leave->delete();
+        $this->dashboardService->clearLeaveCache();
 
         return back()->with('success', 'Đã hủy đơn nghỉ phép.');
     }

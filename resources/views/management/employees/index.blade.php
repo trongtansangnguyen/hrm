@@ -8,6 +8,7 @@
         1 => 'Đang làm việc',
         2 => 'Đã nghỉ',
         3 => 'Tạm dừng',
+        4 => 'Trong ca làm',
     ];
 
     $genderLabel = [

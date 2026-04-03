@@ -106,4 +106,29 @@ class LogRepository extends RepositoryAbstract
     {
         return $this->create($data);
     }
+
+    /**
+     * Get recent activities with user info
+     */
+    public function getRecentActivities(int $limit = 5): array
+    {
+        return $this->newQuery()
+            ->with(['user'])
+            ->latest('created_at')
+            ->limit($limit)
+            ->get()
+            ->map(function ($log) {
+                return [
+                    'id' => $log->id,
+                    'action' => $log->action,
+                    'table_name' => $log->table_name,
+                    'record_id' => $log->record_id,
+                    'user_name' => $log->user?->name ?? 'Unknown',
+                    'created_at' => $log->created_at,
+                    'old_values' => $log->old_values,
+                    'new_values' => $log->new_values,
+                ];
+            })
+            ->toArray();
+    }
 }

@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Management;
 
 use App\Http\Controllers\Controller;
 use App\Models\Candidate;
+use App\Services\DashboardService;
 use Illuminate\Http\Request;
 
 class CandidateController extends Controller
 {
+    public function __construct(
+        protected DashboardService $dashboardService
+    ) {}
+
     public function index()
     {
         // Lấy danh sách ứng viên và phân trang
@@ -37,6 +42,7 @@ class CandidateController extends Controller
     $candidate->update([
         'status' => $statusMap[$request->status]
     ]);
+    $this->dashboardService->clearCandidateCache();
 
     return back()->with('success', 'Cập nhật trạng thái ứng viên thành công!');
 }

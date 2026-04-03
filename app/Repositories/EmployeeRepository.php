@@ -43,7 +43,15 @@ class EmployeeRepository extends RepositoryAbstract
      */
     public function countAllWorkingEmployees(): int
     {
-        return $this->newQuery()->where('status', EmployeeStatus::WORKING)->count();
+        return $this->newQuery()->whereIn('status', [EmployeeStatus::WORKING, EmployeeStatus::ON_DUTY])->count();
+    }
+
+    /**
+     * Get count all employees is on duty
+     */
+    public function countAllOnDutyEmployees(): int
+    {
+        return $this->newQuery()->where('status', EmployeeStatus::ON_DUTY)->count();
     }
     
     /**

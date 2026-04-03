@@ -3,186 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Quản lý Nhân Sự</title>
+    <title>SGU Tech Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.tailwindcss.com"></script> 
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-gradient-to-br from-blue-500 via-purple-500 to-purple-700 min-h-screen">
-    <!-- Header -->
-    <header class="bg-white/10 backdrop-blur-md border-b border-white/20">
+<body class="bg-[#f6f8fa] text-[#1f2328] font-sans min-h-screen">
+
+    <header class="bg-[#24292f] py-3 shadow-sm relative z-50" x-data="{ mobileMenuOpen: false }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav class="flex flex-col sm:flex-row justify-between items-center py-5 gap-4">
-                <div class="flex items-center gap-3 text-white text-2xl font-bold">
-                    <i class="fas fa-building text-3xl"></i>
-                    <span>HRM System</span>
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-4 text-white">
+                    <a href="/" class="flex items-center gap-3 hover:opacity-80 transition">
+                        <i class="fas fa-building text-2xl"></i>
+                        <span class="font-bold text-lg tracking-tight">SGU Tech Hub</span>
+                    </a>
+                    
+                    <nav class="hidden md:flex gap-4 ml-6 text-sm font-medium text-gray-300">
+                        <a href="#about" class="hover:text-white transition">Về chúng tôi</a>
+                        <a href="{{ route('public.candidates.create') }}" class="hover:text-white transition">Tuyển dụng</a>
+                    </nav>
                 </div>
-                <div class="flex gap-3">
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="px-6 py-3 border-2 border-white text-white rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}" class="px-6 py-3 border-2 border-white text-white rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300">
-                            <i class="fas fa-sign-in-alt"></i> Đăng nhập
-                        </a>
-                    @endauth
+
+                <div class="flex items-center gap-3">
+                    <button 
+                        @click="mobileMenuOpen = !mobileMenuOpen"
+                        class="md:hidden text-gray-300 hover:text-white p-2 focus:outline-none"
+                    >
+                        <i class="fas" :class="mobileMenuOpen ? 'fa-times' : 'fa-bars'"></i>
+                    </button>
                 </div>
+            </div>
+        </div>
+
+        <div 
+            x-show="mobileMenuOpen" 
+            @click.away="mobileMenuOpen = false"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 -translate-y-4"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 -translate-y-4"
+            class="absolute left-0 right-0 top-full bg-[#24292f] border-t border-gray-700 shadow-2xl md:hidden z-50"
+        >
+            <nav class="flex flex-col px-4 py-4 text-sm font-medium text-gray-300">
+                <a href="#about" @click="mobileMenuOpen = false" class="hover:text-white py-3 border-b border-gray-800 flex items-center justify-between">
+                    Về chúng tôi <i class="fas fa-chevron-right text-xs opacity-50"></i>
+                </a>
+                <a href="{{ route('public.candidates.create') }}" @click="mobileMenuOpen = false" class="hover:text-white py-3 border-b border-gray-800 flex items-center justify-between">
+                    Tuyển dụng <i class="fas fa-chevron-right text-xs opacity-50"></i>
+                </a>
+                <a href="{{ route('dashboard') }}" @click="mobileMenuOpen = false" class="hover:text-white py-3 border-b border-gray-800 flex items-center justify-between">
+                    Truy cập hệ thống <i class="fas fa-chevron-right text-xs opacity-50"></i>
+                </a>
             </nav>
         </div>
+
+        <div 
+            x-show="mobileMenuOpen" 
+            x-transition:enter="transition opacity ease-linear duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition opacity ease-linear duration-200"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+            style="top: 60px;" 
+        ></div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="text-center py-20 px-4 text-white">
-        <div class="max-w-4xl mx-auto">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                HRM System
+    <section class="bg-[#24292f] text-white pt-20 pb-28 border-b border-gray-700">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <span class="text-blue-400 font-mono text-sm mb-4 block">Hệ thống quản trị nội bộ v1.0</span>
+            <h1 class="text-4xl sm:text-6xl font-bold mb-6 tracking-tight">
+                Xây dựng văn hóa doanh nghiệp số tại SGU Tech Hub
             </h1>
-            <p class="text-lg sm:text-xl mb-10 opacity-90 max-w-2xl mx-auto">
-                Hệ thống quản lý nhân sự hiện đại, giúp bạn dễ dàng tra cứu thông tin, chấm công, quản lý nghỉ phép và nhiều hơn nữa
+            <p class="text-xl text-gray-400 mb-10 max-w-3xl mx-auto leading-relaxed">
+                Chúng tôi tối ưu hóa sức mạnh nhân sự thông qua nền tảng công nghệ tập trung. 
+                Nơi mọi quy trình từ tuyển dụng đến phát triển nghề nghiệp được minh bạch hóa hoàn toàn.
             </p>
-            <div class="flex flex-wrap gap-5 justify-center">
-                @auth
-                    <a href="{{ route('dashboard') }}" class="px-10 py-4 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
-                        <i class="fas fa-tachometer-alt"></i> Vào Dashboard
-                    </a>
-                @else
-                    <a href="{{ route('login') }}" class="px-10 py-4 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
-                        <i class="fas fa-sign-in-alt"></i> Đăng nhập hệ thống
-                    </a>
-                @endauth
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="bg-white py-20 px-4">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="text-4xl sm:text-5xl font-bold text-center mb-16 text-gray-800">
-                Các chức năng hỗ trợ
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                <!-- Feature 1 -->
-                <div class="text-center p-8 bg-gray-50 rounded-xl hover:-translate-y-3 hover:shadow-2xl transition-all duration-300">
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-users text-white text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Thông tin nhân viên</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Tra cứu thông tin cá nhân, thông tin đồng nghiệp, phòng ban và chức vụ dễ dàng
-                    </p>
-                </div>
-
-                <!-- Feature 2 -->
-                <div class="text-center p-8 bg-gray-50 rounded-xl hover:-translate-y-3 hover:shadow-2xl transition-all duration-300">
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-clock text-white text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Chấm công thông minh</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Hệ thống chấm công tự động, theo dõi giờ làm việc chính xác và tiện lợi
-                    </p>
-                </div>
-
-                <!-- Feature 3 -->
-                <div class="text-center p-8 bg-gray-50 rounded-xl hover:-translate-y-3 hover:shadow-2xl transition-all duration-300">
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-money-bill-wave text-white text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Tính lương tự động</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Tự động tính lương, phụ cấp, thưởng dựa trên chấm công và các quy định
-                    </p>
-                </div>
-
-                <!-- Feature 4 -->
-                <div class="text-center p-8 bg-gray-50 rounded-xl hover:-translate-y-3 hover:shadow-2xl transition-all duration-300">
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-calendar-check text-white text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Quản lý nghỉ phép</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Xử lý đơn nghỉ phép nhanh chóng, minh bạch và dễ dàng theo dõi
-                    </p>
-                </div>
-
-                <!-- Feature 5 -->
-                <div class="text-center p-8 bg-gray-50 rounded-xl hover:-translate-y-3 hover:shadow-2xl transition-all duration-300">
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-chart-line text-white text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Báo cáo chi tiết</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Thống kê, báo cáo đa dạng giúp đưa ra quyết định chính xác
-                    </p>
-                </div>
-
-                <!-- Feature 6 -->
-                <div class="text-center p-8 bg-gray-50 rounded-xl hover:-translate-y-3 hover:shadow-2xl transition-all duration-300">
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-user-tie text-white text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Hồ sơ cá nhân</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Quản lý và cập nhật thông tin cá nhân, hồ sơ nghề nghiệp của bạn một cách tiện lợi
-                    </p>
-                </div>
-
-                <!-- Feature 7 -->
-                <a href="{{ route('public.candidates.create') }}" class="block group cursor-pointer">
-            <div class="text-center p-8 bg-gray-50 rounded-xl hover:-translate-y-3 hover:shadow-2xl transition-all duration-300">
-                <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-user-tie text-white text-3xl"></i>
-                </div>
-                <h3 class="text-2xl font-semibold mb-4 text-gray-800">Tuyển Dụng Nhân Sự</h3>
-                <p class="text-gray-600 leading-relaxed">
-                    Tuyển dụng nhân sự dễ dàng, quản lý hồ sơ ứng viên và theo dõi tiến trình tuyển dụng hiệu quả.
-                </p>
-            </div>
+            <div class="flex flex-wrap gap-3 justify-center">
+                <a href="{{ route('dashboard') }}" class="bg-[#2da44e] hover:bg-[#2c974b] px-8 py-3 rounded-md font-bold text-lg transition flex items-center gap-2">
+                    <i class="fas fa-rocket"></i> Truy cập hệ thống ngay
+                </a>
+                <a href="#about" class="bg-transparent border border-gray-500 hover:border-white px-8 py-3 rounded-md font-bold text-lg transition">
+                    Tìm hiểu về chúng tôi
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="bg-gradient-to-br from-blue-500 via-purple-500 to-purple-700 py-16 px-4">
+    <section id="about" class="py-20 px-4 -mt-12">
         <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-10 text-center text-white">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="bg-white border border-[#d0d7de] p-6 rounded-lg shadow-sm hover:border-blue-500 transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-blue-50 rounded-md">
+                            <i class="fas fa-fingerprint text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold">Minh bạch thông tin</h3>
+                    </div>
+                    <p class="text-[#656d76] text-sm leading-6">
+                        Mọi nhân viên đều có quyền truy cập hồ sơ cá nhân, lộ trình thăng tiến và bảng lương công khai, đảm bảo tính công bằng tuyệt đối trong tổ chức.
+                    </p>
+                </div>
+
+                <div class="bg-white border border-[#d0d7de] p-6 rounded-lg shadow-sm hover:border-blue-500 transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-green-50 rounded-md">
+                            <i class="fas fa-seedling text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold">Phát triển tài năng</h3>
+                    </div>
+                    <p class="text-[#656d76] text-sm leading-6">
+                        Hệ thống tích hợp các khóa đào tạo nội bộ và theo dõi kỹ năng (Skills Map), giúp bạn định hướng phát triển sự nghiệp bền vững tại công ty.
+                    </div>
+
+                <div class="bg-white border border-[#d0d7de] p-6 rounded-lg shadow-sm hover:border-blue-500 transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-purple-50 rounded-md">
+                            <i class="fas fa-hand-holding-heart text-purple-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold">Chế độ phúc lợi</h3>
+                    </div>
+                    <p class="text-[#656d76] text-sm leading-6">
+                        Đăng ký nghỉ phép, bảo hiểm và nhận thưởng năng suất chỉ trong vài giây. Chúng tôi ưu tiên trải nghiệm hạnh phúc của mỗi thành viên.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="border-t border-[#d0d7de] py-16 bg-[#f6f8fa]">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-center text-sm font-semibold text-[#656d76] uppercase tracking-[0.2em] mb-12">Chỉ số phát triển doanh nghiệp</h2>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
                 <div>
-                    <h3 class="text-5xl font-bold mb-3"><i class="fas fa-shield-alt"></i></h3>
-                    <p class="text-lg opacity-90">Bảo mật cao</p>
+                    <p class="text-4xl font-extrabold text-[#1f2328]">500+</p>
+                    <p class="text-[#656d76] text-xs font-bold mt-2">Nhân sự chính thức</p>
                 </div>
                 <div>
-                    <h3 class="text-5xl font-bold mb-3"><i class="fas fa-bolt"></i></h3>
-                    <p class="text-lg opacity-90">Xử lý nhanh chóng</p>
+                    <p class="text-4xl font-extrabold text-[#1f2328]">12</p>
+                    <p class="text-[#656d76] text-xs font-bold mt-2">Phòng ban chuyên môn</p>
                 </div>
                 <div>
-                    <h3 class="text-5xl font-bold mb-3"><i class="fas fa-mobile-alt"></i></h3>
-                    <p class="text-lg opacity-90">Truy cập mọi lúc</p>
+                    <p class="text-4xl font-extrabold text-[#1f2328]">05</p>
+                    <p class="text-[#656d76] text-xs font-bold mt-2">Văn phòng đại diện</p>
                 </div>
                 <div>
-                    <h3 class="text-5xl font-bold mb-3"><i class="fas fa-headset"></i></h3>
-                    <p class="text-lg opacity-90">Hỗ trợ IT nội bộ</p>
+                    <p class="text-4xl font-extrabold text-[#1f2328]">Top 10</p>
+                    <p class="text-[#656d76] text-xs font-bold mt-2">Môi trường làm việc</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-black/20 backdrop-blur-md py-10 px-4 text-center text-white">
-        <div class="max-w-7xl mx-auto">
-            <p class="mb-4 opacity-80">&copy; 2026 Hệ thống Quản lý Nhân sự. Bản quyền thuộc về Công ty.</p>
-            <div class="flex flex-wrap gap-8 justify-center">
-                <a href="#" class="opacity-80 hover:opacity-100 transition-opacity">
-                    <i class="fas fa-book"></i> Hướng dẫn sử dụng
-                </a>
-                <a href="#" class="opacity-80 hover:opacity-100 transition-opacity">
-                    <i class="fas fa-question-circle"></i> Hỗ trợ
-                </a>
-                <a href="#" class="opacity-80 hover:opacity-100 transition-opacity">
-                    <i class="fas fa-envelope"></i> Liên hệ IT
-                </a>
+    <footer class="py-12 px-4 border-t border-[#d0d7de]">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-4 text-[#656d76] text-xs">
+                <i class="fas fa-building text-2xl"></i>
+                <span>© 2026 SGU Tech Hub, Inc.</span>
+                <a href="#" class="hover:text-blue-600">Terms</a>
+                <a href="#" class="hover:text-blue-600">Privacy</a>
+            </div>
+            <div class="flex gap-6 text-[#656d76] text-sm">
+                <a href="#" class="hover:text-blue-600"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-blue-600"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="hover:text-blue-600"><i class="fab fa-linkedin"></i></a>
             </div>
         </div>
     </footer>
+
 </body>
 </html>

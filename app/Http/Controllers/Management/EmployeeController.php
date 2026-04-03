@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Management;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Employee;
+use App\Services\DashboardService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
 {
+    public function __construct(
+        protected DashboardService $dashboardService
+    ) {}
+
     public function index(Request $request)
     {
         $filters = $request->only([
@@ -108,6 +113,7 @@ class EmployeeController extends Controller
         ]);
 
         Employee::create($validated);
+        $this->dashboardService->clearEmployeeCache();
 
         return redirect()
             ->route('management.employees.index')
@@ -158,6 +164,7 @@ class EmployeeController extends Controller
         ]);
 
         $employee->update($validated);
+        $this->dashboardService->clearEmployeeCache();
 
         return redirect()
             ->route('management.employees.index')
@@ -168,6 +175,7 @@ class EmployeeController extends Controller
     {
         try {
             $employee->delete();
+            $this->dashboardService->clearEmployeeCache();
 
             return redirect()
                 ->route('management.employees.index')
@@ -178,7 +186,4 @@ class EmployeeController extends Controller
                 ->with('error', 'Không thể xóa nhân viên này do còn dữ liệu liên quan.');
         }
     }
-
-
-    
 }
