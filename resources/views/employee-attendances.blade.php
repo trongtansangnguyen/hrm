@@ -24,7 +24,7 @@
     @else
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div class="bg-white rounded-xl shadow-sm p-5 lg:col-span-2">
-                <div class="flex items-center justify-between mb-4">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
                     <h3 class="text-lg font-semibold text-gray-800">Chấm công hôm nay</h3>
                     <span class="text-sm text-gray-500">{{ now()->format('d/m/Y') }}</span>
                 </div>
@@ -50,20 +50,20 @@
                     </div>
                 </div>
 
-                <div class="flex flex-wrap items-center gap-3">
+                <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3">
                     @if($canCheckIn)
-                        <form method="POST" action="{{ route('employee-attendances.check-in') }}">
+                        <form method="POST" action="{{ route('employee-attendances.check-in') }}" class="w-full sm:w-auto">
                             @csrf
-                            <button type="submit" class="px-5 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium">
+                            <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium">
                                 <i class="fas fa-right-to-bracket mr-2"></i> Check-in
                             </button>
                         </form>
                     @endif
 
                     @if($canCheckOut)
-                        <form method="POST" action="{{ route('employee-attendances.check-out') }}">
+                        <form method="POST" action="{{ route('employee-attendances.check-out') }}" class="w-full sm:w-auto">
                             @csrf
-                            <button type="submit" class="px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium">
+                            <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium">
                                 <i class="fas fa-right-from-bracket mr-2"></i> Check-out
                             </button>
                         </form>
@@ -93,7 +93,7 @@
     @endif
 
     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div class="px-5 py-4 border-b border-gray-100 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div class="font-semibold text-gray-800 flex items-center gap-2">
                 <i class="fas fa-list"></i>
                 <span>Lịch sử chấm công</span>
@@ -103,7 +103,46 @@
             @endif
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="md:hidden divide-y divide-gray-100">
+            @forelse($employee?->id ? $attendances : collect() as $attendance)
+                @php
+                    $meta = $statusMeta[$attendance->status->value] ?? $statusMeta[3];
+                @endphp
+                <div class="p-4 space-y-3">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <div class="text-xs text-gray-500">Ngày</div>
+                            <div class="text-sm font-semibold text-gray-800">{{ $attendance->date?->format('d/m/Y') }}</div>
+                        </div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full {{ $meta['bg'] }} {{ $meta['text'] }}">
+                            <i class="fas {{ $meta['icon'] }}"></i>
+                            {{ $meta['label'] }}
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                            <div class="text-xs text-gray-500">Check-in</div>
+                            <div class="font-medium text-gray-700">{{ $attendance->check_in?->format('H:i:s') ?? '-' }}</div>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-500">Check-out</div>
+                            <div class="font-medium text-gray-700">{{ $attendance->check_out?->format('H:i:s') ?? '-' }}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500">Giờ làm</div>
+                        <div class="text-sm font-medium text-gray-700">{{ number_format((float) $attendance->working_hours, 2) }} giờ</div>
+                    </div>
+                </div>
+            @empty
+                <div class="px-4 py-10 text-center text-gray-500">
+                    <i class="fas fa-inbox text-3xl mb-3 text-gray-300"></i>
+                    <p class="text-base">Chưa có dữ liệu chấm công</p>
+                </div>
+            @endforelse
+        </div>
+
+        <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
