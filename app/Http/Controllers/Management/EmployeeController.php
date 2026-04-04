@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Management;
 
 use App\Http\Controllers\Controller;
+use App\Models\Allowance;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Services\DashboardService;
@@ -91,8 +92,9 @@ class EmployeeController extends Controller
     public function create()
     {
         $departments = Department::query()->orderBy('name')->get();
+        $allowances = Allowance::query()->orderBy('name')->get();
 
-        return view('management.employees.create', compact('departments'));
+        return view('management.employees.create', compact('departments', 'allowances'));
     }
 
     public function store(Request $request)
@@ -109,6 +111,8 @@ class EmployeeController extends Controller
             'status' => ['required', 'integer', 'in:1,2,3'],
             'department_id' => ['nullable', 'integer', 'exists:departments,id'],
             'address' => ['nullable', 'string', 'max:255'],
+            'allowance_ids' => ['nullable', 'array'],
+            'allowance_ids.*' => ['integer', 'exists:allowances,id'],
         ], [
             'identity_number.required' => 'CMND/CCCD là bắt buộc.',
             'identity_number.unique' => 'CMND/CCCD đã tồn tại.',
@@ -118,9 +122,11 @@ class EmployeeController extends Controller
             'gender.in' => 'Giới tính không hợp lệ.',
             'status.in' => 'Trạng thái không hợp lệ.',
             'department_id.exists' => 'Phòng ban không tồn tại.',
+            'allowance_ids.*.exists' => 'Phụ cấp không tồn tại.',
         ]);
 
         $employee = DB::transaction(function () use ($validated) {
+            $allowanceIds = $validated['allowance_ids'] ?? [];
             $employee = Employee::create(array_merge($validated, [
                 'employee_code' => $this->generateTemporaryEmployeeCode(),
             ]));
@@ -128,6 +134,22 @@ class EmployeeController extends Controller
             $employee->forceFill([
                 'employee_code' => $this->formatEmployeeCode($employee->id),
             ])->save();
+
+            if (!empty($allowanceIds)) {
+                $now = now();
+                DB::table('employee_allowances')->insert(
+                    collect($allowanceIds)
+                        ->unique()
+                        ->map(fn ($allowanceId) => [
+                            'employee_id' => $employee->id,
+                            'allowance_id' => $allowanceId,
+                            'created_at' => $now,
+                            'updated_at' => $now,
+                        ])
+                        ->values()
+                        ->all()
+                );
+            }
 
             return $employee->fresh();
         });
@@ -156,9 +178,15 @@ class EmployeeController extends Controller
     public function edit(Employee $employee)
     {
         $departments = Department::query()->orderBy('name')->get();
+        $allowances = Allowance::query()->orderBy('name')->get();
+        $selectedAllowanceIds = DB::table('employee_allowances')
+            ->where('employee_id', $employee->id)
+            ->pluck('allowance_id')
+            ->map(fn ($id) => (int) $id)
+            ->all();
         $employee->load('department');
 
-        return view('management.employees.edit', compact('employee', 'departments'));
+        return view('management.employees.edit', compact('employee', 'departments', 'allowances', 'selectedAllowanceIds'));
     }
 
     public function update(Request $request, Employee $employee)
@@ -175,6 +203,8 @@ class EmployeeController extends Controller
             'status' => ['required', 'integer', 'in:1,2,3'],
             'department_id' => ['nullable', 'integer', 'exists:departments,id'],
             'address' => ['nullable', 'string', 'max:255'],
+            'allowance_ids' => ['nullable', 'array'],
+            'allowance_ids.*' => ['integer', 'exists:allowances,id'],
         ], [
             'identity_number.required' => 'CMND/CCCD là bắt buộc.',
             'identity_number.unique' => 'CMND/CCCD đã tồn tại.',
@@ -184,10 +214,36 @@ class EmployeeController extends Controller
             'gender.in' => 'Giới tính không hợp lệ.',
             'status.in' => 'Trạng thái không hợp lệ.',
             'department_id.exists' => 'Phòng ban không tồn tại.',
+            'allowance_ids.*.exists' => 'Phụ cấp không tồn tại.',
         ]);
 
+        $allowanceIds = $validated['allowance_ids'] ?? [];
+        unset($validated['allowance_ids']);
+
         $oldValues = $employee->toArray();
-        $employee->update($validated);
+        DB::transaction(function () use ($employee, $validated, $allowanceIds): void {
+            $employee->update($validated);
+
+            DB::table('employee_allowances')
+                ->where('employee_id', $employee->id)
+                ->delete();
+
+            if (!empty($allowanceIds)) {
+                $now = now();
+                DB::table('employee_allowances')->insert(
+                    collect($allowanceIds)
+                        ->unique()
+                        ->map(fn ($allowanceId) => [
+                            'employee_id' => $employee->id,
+                            'allowance_id' => $allowanceId,
+                            'created_at' => $now,
+                            'updated_at' => $now,
+                        ])
+                        ->values()
+                        ->all()
+                );
+            }
+        });
 
         $expectedEmployeeCode = $this->formatEmployeeCode($employee->id);
         if ($employee->employee_code !== $expectedEmployeeCode) {

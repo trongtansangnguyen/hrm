@@ -1,5 +1,8 @@
 @php
     $employee = $employee ?? null;
+    $selectedAllowanceIds = collect(old('allowance_ids', $selectedAllowanceIds ?? []))
+        ->map(fn ($id) => (int) $id)
+        ->all();
     $statusOptions = [
         1 => 'Đang làm việc',
         2 => 'Đã nghỉ',
@@ -208,6 +211,43 @@
             @endforeach
         </select>
         @error('department_id')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div class="md:col-span-2">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Phụ cấp</label>
+
+        @if($allowances->isEmpty())
+            <p class="px-4 py-3 border border-dashed border-gray-300 rounded-lg text-sm text-gray-500 bg-gray-50">
+                Chưa có phụ cấp nào trong hệ thống.
+            </p>
+        @else
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 border border-gray-200 rounded-lg p-4 @error('allowance_ids') border-red-500 @enderror @error('allowance_ids.*') border-red-500 @enderror">
+                @foreach($allowances as $allowance)
+                    <label for="allowance_{{ $allowance->id }}" class="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                        <input
+                            type="checkbox"
+                            name="allowance_ids[]"
+                            id="allowance_{{ $allowance->id }}"
+                            value="{{ $allowance->id }}"
+                            class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                            {{ in_array((int) $allowance->id, $selectedAllowanceIds, true) ? 'checked' : '' }}
+                        >
+                        <span class="text-sm text-gray-700">
+                            <span class="font-medium block">{{ $allowance->name }}</span>
+                            <span class="text-gray-500">{{ number_format($allowance->amount) }} VNĐ</span>
+                        </span>
+                    </label>
+                @endforeach
+            </div>
+            <p class="mt-1 text-xs text-gray-500">Có thể chọn nhiều phụ cấp cùng lúc.</p>
+        @endif
+
+        @error('allowance_ids')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+        @enderror
+        @error('allowance_ids.*')
             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
         @enderror
     </div>
