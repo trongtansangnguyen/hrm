@@ -113,22 +113,68 @@ class LogRepository extends RepositoryAbstract
     public function getRecentActivities(int $limit = 5): array
     {
         return $this->newQuery()
-            ->with(['user'])
+            ->with(['user.employee'])
             ->latest('created_at')
             ->limit($limit)
             ->get()
             ->map(function ($log) {
+                $action = (string) $log->action;
+                $tableName = (string) ($log->table_name ?? '');
+                $actionLabel = $this->formatActionLabel($action);
+                $tableLabel = $this->formatTableLabel($tableName, $action);
+
                 return [
                     'id' => $log->id,
-                    'action' => $log->action,
-                    'table_name' => $log->table_name,
+                    'action' => $action,
+                    'action_label' => $actionLabel,
+                    'table_name' => $tableName,
+                    'table_label' => $tableLabel,
+                    'description' => trim("{$actionLabel} {$tableLabel}"),
                     'record_id' => $log->record_id,
-                    'user_name' => $log->user?->name ?? 'Unknown',
+                    'user_name' => $log->user?->employee?->full_name
+                        ?? $log->user?->email
+                        ?? 'Hệ thống',
                     'created_at' => $log->created_at,
                     'old_values' => $log->old_values,
                     'new_values' => $log->new_values,
                 ];
             })
             ->toArray();
+    }
+
+    private function formatActionLabel(string $action): string
+    {
+        if (str_starts_with($action, 'create_')) {
+            return 'Tạo';
+        }
+
+        if (str_starts_with($action, 'update_')) {
+            return 'Cập nhật';
+        }
+
+        if (str_starts_with($action, 'delete_')) {
+            return 'Xóa';
+        }
+
+        return ucfirst(str_replace('_', ' ', $action));
+    }
+
+    private function formatTableLabel(string $tableName, string $action): string
+    {
+        $entityFromAction = '';
+        if (preg_match('/^(create|update|delete)_(.+)$/', $action, $matches) === 1) {
+            $entityFromAction = $matches[2];
+        }
+
+        $entityKey = $entityFromAction !== '' ? $entityFromAction : rtrim($tableName, 's');
+
+        return match ($entityKey) {
+            'employee' => 'nhân viên',
+            'department' => 'phòng ban',
+            'user' => 'tài khoản',
+            'candidate' => 'ứng viên',
+            'leave', 'leave_request' => 'đơn nghỉ phép',
+            default => $tableName !== '' ? str_replace('_', ' ', $tableName) : 'dữ liệu',
+        };
     }
 }

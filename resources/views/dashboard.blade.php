@@ -85,7 +85,7 @@
                     </div> -->
                     <div class="flex-1">
                         <p class="text-sm font-medium text-gray-800">
-                            {{ ucfirst($activity['action']) }} {{ str_replace('_', ' ', $activity['table_name']) }}
+                            {{ $activity['description'] ?? (ucfirst($activity['action']) . ' ' . str_replace('_', ' ', $activity['table_name'])) }}
                         </p>
                         <p class="text-xs text-gray-500 mt-1">{{ $activity['user_name'] }}</p>
                         <p class="text-xs text-gray-400 mt-1">{{ $activity['created_at']->diffForHumans() }}</p>
