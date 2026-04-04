@@ -6,13 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Services\DashboardService;
+use App\Services\LogService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
 {
     public function __construct(
-        protected DashboardService $dashboardService
+        protected DashboardService $dashboardService,
+        protected LogService $logService
     ) {}
 
     public function index(Request $request)
@@ -119,7 +121,15 @@ class EmployeeController extends Controller
             'department_id.exists' => 'Phòng ban không tồn tại.',
         ]);
 
-        Employee::create($validated);
+        $employee = Employee::create($validated);
+
+        $this->logService->logAction(
+            action: 'create_employee',
+            tableName: 'employees',
+            recordId: $employee->id,
+            newValues: $employee->toArray()
+        );
+
         $this->dashboardService->clearEmployeeCache();
 
         return redirect()
@@ -170,7 +180,17 @@ class EmployeeController extends Controller
             'department_id.exists' => 'Phòng ban không tồn tại.',
         ]);
 
+        $oldValues = $employee->toArray();
         $employee->update($validated);
+
+        $this->logService->logAction(
+            action: 'update_employee',
+            tableName: 'employees',
+            recordId: $employee->id,
+            oldValues: $oldValues,
+            newValues: $employee->fresh()?->toArray() ?? $employee->toArray()
+        );
+
         $this->dashboardService->clearEmployeeCache();
 
         return redirect()
@@ -181,7 +201,16 @@ class EmployeeController extends Controller
     public function destroy(Employee $employee)
     {
         try {
+            $oldValues = $employee->toArray();
             $employee->delete();
+
+            $this->logService->logAction(
+                action: 'delete_employee',
+                tableName: 'employees',
+                recordId: $employee->id,
+                oldValues: $oldValues
+            );
+
             $this->dashboardService->clearEmployeeCache();
 
             return redirect()

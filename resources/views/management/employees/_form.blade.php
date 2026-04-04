@@ -50,7 +50,7 @@
 
     <div>
         <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">
-            Họ <span class="text-red-500">*</span>
+            Tên <span class="text-red-500">*</span>
         </label>
         <input
             type="text"
@@ -67,7 +67,7 @@
 
     <div>
         <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">
-            Tên <span class="text-red-500">*</span>
+            Họ <span class="text-red-500">*</span>
         </label>
         <input
             type="text"
