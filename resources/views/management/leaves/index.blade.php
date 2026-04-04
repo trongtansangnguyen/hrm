@@ -66,6 +66,7 @@
 			<table class="min-w-full divide-y divide-gray-200">
 				<thead class="bg-gray-50">
 					<tr>
+						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">STT</th>
 						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nhân viên</th>
 						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phòng ban</th>
 						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Từ ngày</th>
@@ -82,7 +83,9 @@
 							$meta = $statusColors[$leave->status->value] ?? $statusColors[1];
 						@endphp
 						<tr>
+							<td class="px-4 py-3 text-sm text-gray-900">{{ $loop->iteration }}</td>
 							<td class="px-4 py-3 text-sm text-gray-900">
+
 								{{ $leave->employee?->full_name ?? '-' }}
 								<div class="text-xs text-gray-500">{{ $leave->employee?->employee_code ?? '' }}</div>
 							</td>

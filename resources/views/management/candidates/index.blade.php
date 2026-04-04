@@ -55,6 +55,7 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-gray-50 border-b">
+                    <th class="p-3 text-sm font-semibold text-gray-600">STT</th>
                     <th class="p-3 text-sm font-semibold text-gray-600">Tên Ứng Viên</th>
                     <th class="p-3 text-sm font-semibold text-gray-600">Phòng ban</th>
                     <th class="p-3 text-sm font-semibold text-gray-600">Vị trí</th>
@@ -67,7 +68,10 @@
             <tbody>
     @forelse($candidates as $candidate)
     <tr class="border-b hover:bg-gray-50 transition-colors">
-        {{-- 1. Tên Ứng Viên --}}
+        {{-- 1. STT --}}
+        <td class="p-3 text-sm font-medium text-gray-900">{{ $loop->iteration }}</td>
+
+        {{-- 2. Tên Ứng Viên --}}
         <td class="p-3">
             <div class="text-sm font-medium text-gray-900">{{ $candidate->last_name }} {{ $candidate->first_name }}</div>
         </td>

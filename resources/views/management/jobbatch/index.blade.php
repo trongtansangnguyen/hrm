@@ -53,6 +53,7 @@
         <table class="w-full text-left border-collapse">
             <thead class="bg-slate-50 text-slate-500 uppercase text-xs font-semibold">
                 <tr>
+                    <th class="px-6 py-4">STT</th>
                     <th class="px-6 py-4">Tên Vị Trí</th>
                     <th class="px-6 py-4">Phòng Ban</th>
                     <th class="px-6 py-4">Ứng Viên</th>
@@ -63,6 +64,7 @@
             <tbody class="divide-y divide-slate-100">
                 @forelse($jobs as $job)
                 <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-4 font-medium text-slate-700">{{ $loop->iteration }}</td>
                     <td class="px-6 py-4 font-medium text-slate-700">{{ $job->title }}</td>
                     <td class="px-6 py-4 text-slate-600">{{ $job->department->name ?? '-' }}</td>
                     <td class="px-6 py-4 text-slate-600">{{ $job->candidates->count() }}</td>

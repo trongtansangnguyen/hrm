@@ -92,6 +92,7 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">STT</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Mã NV</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Họ tên</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
@@ -106,6 +107,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($employees as $employee)
                         <tr>
+                            <td class="px-4 py-3 text-sm text-gray-800">{{ $loop->iteration }}</td>
                             <td class="px-4 py-3 text-sm text-gray-800">{{ $employee->employee_code }}</td>
                             <td class="px-4 py-3 text-sm text-gray-800">{{ $employee->full_name }}</td>
                             <td class="px-4 py-3 text-sm text-gray-800">{{ $employee->email }}</td>

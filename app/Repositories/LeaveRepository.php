@@ -32,6 +32,7 @@ class LeaveRepository extends RepositoryAbstract
     public function countAllLeaveRequestsToday(): int
     {
         return $this->newQuery()
+            ->where('status', LeaveRequestStatus::APPROVED)
             ->whereDate('from_date', '<=', now()->toDateString())
             ->whereDate('to_date', '>=', now()->toDateString())
             ->count();
