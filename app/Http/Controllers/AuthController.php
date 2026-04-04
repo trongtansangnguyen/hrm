@@ -98,7 +98,7 @@ class AuthController extends Controller
             $message->subject('Reset Password');
         });
 
-        return back()->with('success', 'Link đặt lại mật khẩu đã được gửi đến email của bạn! Token: ' . $token);
+        return back()->with('success', 'Link đặt lại mật khẩu đã được gửi đến email của bạn!');
     }
 
     /**
