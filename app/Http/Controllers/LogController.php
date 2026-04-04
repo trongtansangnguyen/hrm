@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Services\LogService;
 
 class LogController extends Controller
@@ -23,5 +24,22 @@ class LogController extends Controller
         $tableNames = $this->logService->getDistinctTableNames();
 
         return view('logs', compact('logs', 'filters', 'actions', 'tableNames'));
+    }
+
+    public function detail(int $id): JsonResponse
+    {
+        $log = $this->logService->getLogDetailById($id);
+
+        if (!$log) {
+            return response()->json([
+                'message' => 'Không tìm thấy log.',
+            ], 404);
+        }
+
+        return response()->json([
+            'id' => $log->id,
+            'old_values' => $log->old_values,
+            'new_values' => $log->new_values,
+        ]);
     }
 }

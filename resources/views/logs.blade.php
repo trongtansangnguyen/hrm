@@ -193,7 +193,9 @@
                                 <button 
                                     type="button"
                                     class="text-blue-600 hover:text-blue-900 log-detail-btn" 
-                                    title="Xem chi tiết" data-log-id="{{ $log->id }}">
+                                    title="Xem chi tiết"
+                                    data-log-id="{{ $log->id }}"
+                                    data-detail-url="{{ route('logs.detail', ['id' => $log->id]) }}">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </td>
@@ -223,10 +225,56 @@
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const panel = document.getElementById('filters-section');
         const content = document.getElementById('filters-content');
         const btn = document.getElementById('toggle-filters');
         const storageKey = 'logs_filters_collapsed';
+        const logDetailModal = document.getElementById('logDetailModal');
+        const logDetailContent = document.getElementById('logDetailContent');
+        const detailCache = new Map();
+
+        const escapeHtml = (value) => {
+            if (value === null || value === undefined) {
+                return '';
+            }
+
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
+
+        const renderDetail = (data) => {
+            const oldValues = data.old_values;
+            const newValues = data.new_values;
+
+            if (!oldValues && !newValues) {
+                return '<p class="text-gray-400">Không có dữ liệu thay đổi</p>';
+            }
+
+            let html = '';
+
+            if (oldValues) {
+                html += `
+                    <div class="mb-2">
+                        <p class="font-semibold text-yellow-600 mb-1">Giá trị cũ:</p>
+                        <pre class="text-gray-700 text-xs bg-gray-100 p-2 rounded overflow-auto max-h-48">${escapeHtml(JSON.stringify(oldValues, null, 2))}</pre>
+                    </div>
+                `;
+            }
+
+            if (newValues) {
+                html += `
+                    <div>
+                        <p class="font-semibold text-green-700 mb-1">Giá trị mới:</p>
+                        <pre class="text-gray-700 text-xs bg-gray-100 p-2 rounded overflow-auto max-h-48">${escapeHtml(JSON.stringify(newValues, null, 2))}</pre>
+                    </div>
+                `;
+            }
+
+            return html;
+        };
 
         // Initialize from localStorage (collapsed = only icon bar visible)
         const initial = localStorage.getItem(storageKey);
@@ -240,43 +288,51 @@
             localStorage.setItem(storageKey, isCollapsed ? 'collapsed' : 'expanded');
         });
 
-        // Tooltip overlay for log detail
-        document.querySelectorAll('.log-detail-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+        document.querySelectorAll('.log-detail-btn').forEach((detailBtn) => {
+            detailBtn.addEventListener('click', async function() {
                 const logId = this.getAttribute('data-log-id');
-                const logDetail = document.getElementById('log-detail-data-' + logId);
-                if (!logDetail) return;
-                document.getElementById('logDetailContent').innerHTML = logDetail.innerHTML;
-                document.getElementById('logDetailModal').classList.remove('hidden');
+                const detailUrl = this.getAttribute('data-detail-url');
+
+                if (!logId || !detailUrl || !logDetailModal || !logDetailContent) {
+                    return;
+                }
+
+                logDetailContent.innerHTML = '<p class="text-gray-500">Đang tải chi tiết...</p>';
+                logDetailModal.classList.remove('hidden');
+
+                if (detailCache.has(logId)) {
+                    logDetailContent.innerHTML = detailCache.get(logId);
+                    return;
+                }
+
+                try {
+                    const response = await fetch(detailUrl, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch log detail');
+                    }
+
+                    const data = await response.json();
+                    const rendered = renderDetail(data);
+                    detailCache.set(logId, rendered);
+                    logDetailContent.innerHTML = rendered;
+                } catch (error) {
+                    logDetailContent.innerHTML = '<p class="text-red-500">Không tải được chi tiết log. Vui lòng thử lại.</p>';
+                }
             });
         });
     });
+
     function closeLogDetail() {
         document.getElementById('logDetailModal').classList.add('hidden');
     }
 </script>
 @endsection
-
-@foreach($logs as $log)
-    <div id="log-detail-data-{{ $log->id }}" class="hidden">
-        @if($log->old_values || $log->new_values)
-            @if($log->old_values)
-                <div class="mb-2">
-                    <p class="font-semibold text-yellow-300 mb-1">Giá trị cũ:</p>
-                    <pre class="text-gray-300 text-xs bg-gray-800 p-2 rounded overflow-auto max-h-48">{{ json_encode($log->old_values, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
-                </div>
-            @endif
-            @if($log->new_values)
-                <div>
-                    <p class="font-semibold text-green-300 mb-1">Giá trị mới:</p>
-                    <pre class="text-gray-300 text-xs bg-gray-800 p-2 rounded overflow-auto max-h-48">{{ json_encode($log->new_values, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
-                </div>
-            @endif
-        @else
-            <p class="text-gray-400">Không có dữ liệu thay đổi</p>
-        @endif
-    </div>
-@endforeach
 
 <!-- Log Detail Modal -->
 <div id="logDetailModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">

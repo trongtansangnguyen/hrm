@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('management')->group(function () {
         Route::get('/logs', [LogController::class, 'index'])->name('logs');
+        Route::get('/logs/{id}/detail', [LogController::class, 'detail'])->name('logs.detail');
     });
     // Management Routes
     Route::middleware('management')->prefix('management')->group(function () {

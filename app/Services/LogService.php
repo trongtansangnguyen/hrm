@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Log;
 use App\Services\Core\ServiceBase;
 use App\Repositories\LogRepository;
 use App\Repositories\UserRepository;
@@ -43,6 +44,16 @@ class LogService extends ServiceBase
     public function getDistinctTableNames(): array
     {
         return $this->logRepository->getDistinctTableNames();
+    }
+
+    /**
+     * Get one log detail by ID
+     */
+    public function getLogDetailById(int $id): ?Log
+    {
+        $log = $this->logRepository->find($id);
+
+        return $log instanceof Log ? $log : null;
     }
 
     /**
