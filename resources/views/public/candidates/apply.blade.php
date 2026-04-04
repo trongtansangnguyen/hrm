@@ -59,7 +59,7 @@
                         <select name="job_position_id" required
                             class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl appearance-none focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer">
                             @foreach($positions as $position)
-                                <option value="{{ $position->id }}">{{ $position->title }}</option>
+                                <option value="{{ $position->id }}">{{ $position->title }} - {{ $position->department->description }}</option>
                             @endforeach
                         </select>
                         <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none">
@@ -70,7 +70,7 @@
 
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Đính kèm Hồ sơ (CV) <span class="text-rose-500">*</span></label>
-                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-200 border-dashed rounded-xl hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                    <div id="cv-dropzone" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-200 border-dashed rounded-xl hover:bg-slate-50 transition-colors group cursor-pointer relative">
                         <div class="space-y-1 text-center">
                             <svg class="mx-auto h-12 w-12 text-slate-400 group-hover:text-indigo-500 transition-colors" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                                 <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -79,9 +79,26 @@
                                 <span class="relative cursor-pointer font-semibold text-indigo-600 hover:text-indigo-500">Tải tệp lên</span>
                                 <p class="pl-1">hoặc kéo thả vào đây</p>
                             </div>
-                            <p class="text-xs text-slate-500 italic">PDF, DOC, DOCX tối đa 5MB</p>
+                            <p id="cv-help-text" class="text-xs text-slate-500 italic">PDF, DOC, DOCX tối đa 5MB</p>
                         </div>
-                        <input name="cv" type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" required>
+                        <input id="cv-input" name="cv" type="file" accept=".pdf,.doc,.docx" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" required>
+                    </div>
+                    <p id="cv-file-name" class="mt-2 text-sm text-emerald-600 font-medium hidden"></p>
+                    <div id="cv-actions" class="mt-3 hidden items-center gap-2">
+                        <button
+                            id="cv-change-btn"
+                            type="button"
+                            class="px-3 py-1.5 text-sm font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors"
+                        >
+                            Đổi file
+                        </button>
+                        <button
+                            id="cv-remove-btn"
+                            type="button"
+                            class="px-3 py-1.5 text-sm font-medium text-rose-700 bg-rose-50 border border-rose-200 rounded-lg hover:bg-rose-100 transition-colors"
+                        >
+                            Xóa file
+                        </button>
                     </div>
                 </div>
             </div>
@@ -99,4 +116,66 @@
         Bằng cách nhấn nộp hồ sơ, bạn đồng ý với các điều khoản bảo mật của hệ thống HRM.
     </p>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cvInput = document.getElementById('cv-input');
+        const cvFileName = document.getElementById('cv-file-name');
+        const cvHelpText = document.getElementById('cv-help-text');
+        const cvDropzone = document.getElementById('cv-dropzone');
+        const cvActions = document.getElementById('cv-actions');
+        const cvChangeButton = document.getElementById('cv-change-btn');
+        const cvRemoveButton = document.getElementById('cv-remove-btn');
+
+        if (!cvInput || !cvFileName || !cvHelpText || !cvDropzone || !cvActions || !cvChangeButton || !cvRemoveButton) {
+            return;
+        }
+
+        const resetCvState = function () {
+            cvInput.value = '';
+            cvFileName.textContent = '';
+            cvFileName.classList.add('hidden');
+            cvHelpText.textContent = 'PDF, DOC, DOCX tối đa 5MB';
+            cvDropzone.classList.remove('border-emerald-400', 'bg-emerald-50/40');
+            cvActions.classList.add('hidden');
+            cvActions.classList.remove('flex');
+        };
+
+        const setSelectedFile = function (file) {
+            cvFileName.textContent = `Đã chọn: ${file.name}`;
+            cvFileName.classList.remove('hidden');
+            cvHelpText.textContent = 'Tệp đã sẵn sàng để gửi.';
+            cvDropzone.classList.add('border-emerald-400', 'bg-emerald-50/40');
+            cvActions.classList.remove('hidden');
+            cvActions.classList.add('flex');
+        };
+
+        cvInput.addEventListener('change', function (event) {
+            const files = event.target.files;
+
+            if (!files || files.length === 0) {
+                resetCvState();
+                return;
+            }
+
+            const file = files[0];
+
+            if (files.length > 1) {
+                const fileList = new DataTransfer();
+                fileList.items.add(file);
+                cvInput.files = fileList.files;
+            }
+
+            setSelectedFile(file);
+        });
+
+        cvChangeButton.addEventListener('click', function () {
+            cvInput.click();
+        });
+
+        cvRemoveButton.addEventListener('click', function () {
+            resetCvState();
+        });
+    });
+</script>
 @endsection
