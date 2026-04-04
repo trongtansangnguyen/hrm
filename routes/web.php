@@ -6,9 +6,11 @@ use App\Http\Controllers\Management\UserController;
 use App\Http\Controllers\Management\EmployeeController;
 use App\Http\Controllers\Management\DepartmentController;
 use App\Http\Controllers\Management\LeaveController as ManagementLeaveController;
+use App\Http\Controllers\Management\AttendanceController as ManagementAttendanceController;
 use App\Http\Controllers\Management\AllowanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\PublicCandidateController;
 use App\Http\Controllers\Management\JobbatchController;
@@ -27,6 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
     Route::get('/leaves', [LeaveController::class, 'index'])->name('leaves');
+    Route::get('/employee-attendances', [AttendanceController::class, 'index'])->name('employee-attendances.index');
+    Route::post('/employee-attendances/check-in', [AttendanceController::class, 'checkIn'])->name('employee-attendances.check-in');
+    Route::post('/employee-attendances/check-out', [AttendanceController::class, 'checkOut'])->name('employee-attendances.check-out');
     Route::get('/employee-leaves', [LeaveController::class, 'index'])->name('employee-leaves.index');
     Route::post('/employee-leaves', [LeaveController::class, 'store'])->name('employee-leaves.store');
     Route::delete('/employee-leaves/{leave}', [LeaveController::class, 'destroy'])
@@ -69,7 +74,7 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::prefix('attendances')->group(function () {
-            // Attendance routes can be added here
+            Route::get('/', [ManagementAttendanceController::class, 'index'])->name('management.attendances.index');
         });
 
         Route::prefix('leaves')->group(function () {
