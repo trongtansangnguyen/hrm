@@ -14,21 +14,23 @@
 @endphp
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
+    <div class="md:col-span-2">
         <label for="employee_code" class="block text-sm font-medium text-gray-700 mb-2">
-            Mã nhân viên <span class="text-red-500">*</span>
+            Mã nhân viên
         </label>
-        <input
-            type="text"
-            name="employee_code"
-            id="employee_code"
-            value="{{ old('employee_code', $employee?->employee_code) }}"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('employee_code') border-red-500 @enderror"
-            required
-        >
-        @error('employee_code')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-        @enderror
+        @if($employee)
+            <input
+                type="text"
+                id="employee_code"
+                value="{{ $employee->employee_code }}"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700"
+                disabled
+            >
+        @else
+            <p class="px-4 py-2 border border-dashed border-gray-300 rounded-lg text-sm text-gray-500 bg-gray-50">
+                Mã nhân viên sẽ được tạo tự động sau khi lưu (dạng EMP000001).
+            </p>
+        @endif
     </div>
 
     <div>

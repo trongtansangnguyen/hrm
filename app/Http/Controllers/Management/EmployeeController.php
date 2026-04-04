@@ -8,6 +8,8 @@ use App\Models\Employee;
 use App\Services\DashboardService;
 use App\Services\LogService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
@@ -61,13 +63,13 @@ class EmployeeController extends Controller
             $query->where('status', $filters['status']);
         }
 
-        $sortBy = $filters['sort_by'] ?? 'join_date';
+        $sortBy = $filters['sort_by'] ?? 'created_at';
         $sortOrder = $filters['sort_order'] ?? 'desc';
         $allowSortBy = ['join_date', 'created_at', 'employee_code', 'first_name', 'last_name'];
         $allowSortOrder = ['asc', 'desc'];
 
         if (!in_array($sortBy, $allowSortBy, true)) {
-            $sortBy = 'join_date';
+            $sortBy = 'created_at';
         }
 
         if (!in_array($sortOrder, $allowSortOrder, true)) {
@@ -96,7 +98,6 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'employee_code' => ['required', 'string', 'max:50', 'unique:employees,employee_code'],
             'identity_number' => ['required', 'string', 'max:50', 'unique:employees,identity_number'],
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
@@ -109,8 +110,6 @@ class EmployeeController extends Controller
             'department_id' => ['nullable', 'integer', 'exists:departments,id'],
             'address' => ['nullable', 'string', 'max:255'],
         ], [
-            'employee_code.required' => 'Mã nhân viên là bắt buộc.',
-            'employee_code.unique' => 'Mã nhân viên đã tồn tại.',
             'identity_number.required' => 'CMND/CCCD là bắt buộc.',
             'identity_number.unique' => 'CMND/CCCD đã tồn tại.',
             'email.required' => 'Email là bắt buộc.',
@@ -121,7 +120,17 @@ class EmployeeController extends Controller
             'department_id.exists' => 'Phòng ban không tồn tại.',
         ]);
 
-        $employee = Employee::create($validated);
+        $employee = DB::transaction(function () use ($validated) {
+            $employee = Employee::create(array_merge($validated, [
+                'employee_code' => $this->generateTemporaryEmployeeCode(),
+            ]));
+
+            $employee->forceFill([
+                'employee_code' => $this->formatEmployeeCode($employee->id),
+            ])->save();
+
+            return $employee->fresh();
+        });
 
         $this->logService->logAction(
             action: 'create_employee',
@@ -155,7 +164,6 @@ class EmployeeController extends Controller
     public function update(Request $request, Employee $employee)
     {
         $validated = $request->validate([
-            'employee_code' => ['required', 'string', 'max:50', Rule::unique('employees', 'employee_code')->ignore($employee->id)],
             'identity_number' => ['required', 'string', 'max:50', Rule::unique('employees', 'identity_number')->ignore($employee->id)],
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
@@ -168,8 +176,6 @@ class EmployeeController extends Controller
             'department_id' => ['nullable', 'integer', 'exists:departments,id'],
             'address' => ['nullable', 'string', 'max:255'],
         ], [
-            'employee_code.required' => 'Mã nhân viên là bắt buộc.',
-            'employee_code.unique' => 'Mã nhân viên đã tồn tại.',
             'identity_number.required' => 'CMND/CCCD là bắt buộc.',
             'identity_number.unique' => 'CMND/CCCD đã tồn tại.',
             'email.required' => 'Email là bắt buộc.',
@@ -182,6 +188,13 @@ class EmployeeController extends Controller
 
         $oldValues = $employee->toArray();
         $employee->update($validated);
+
+        $expectedEmployeeCode = $this->formatEmployeeCode($employee->id);
+        if ($employee->employee_code !== $expectedEmployeeCode) {
+            $employee->forceFill([
+                'employee_code' => $expectedEmployeeCode,
+            ])->save();
+        }
 
         $this->logService->logAction(
             action: 'update_employee',
@@ -221,5 +234,15 @@ class EmployeeController extends Controller
                 ->route('management.employees.index')
                 ->with('error', 'Không thể xóa nhân viên này do còn dữ liệu liên quan.');
         }
+    }
+
+    private function formatEmployeeCode(int $employeeId): string
+    {
+        return 'EMP' . str_pad((string) $employeeId, 6, '0', STR_PAD_LEFT);
+    }
+
+    private function generateTemporaryEmployeeCode(): string
+    {
+        return 'TMP' . now()->format('YmdHis') . Str::upper(Str::random(8));
     }
 }

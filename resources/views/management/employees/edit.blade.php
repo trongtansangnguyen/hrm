@@ -9,7 +9,7 @@
         <div class="flex items-center justify-between mb-6">
             <div>
                 <h3 class="text-2xl font-bold text-gray-800">Chỉnh sửa nhân viên</h3>
-                <p class="text-sm text-gray-500 mt-1">Giao diện form, chưa gắn xử lý cập nhật.</p>
+                <p class="text-sm text-gray-500 mt-1">Mã nhân viên được quản lý tự động theo id.</p>
             </div>
             <a href="{{ route('management.employees.index') }}" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm">
                 <i class="fas fa-arrow-left mr-2"></i>Quay lại

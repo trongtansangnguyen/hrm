@@ -9,7 +9,7 @@
         <div class="flex items-center justify-between mb-6">
             <div>
                 <h3 class="text-2xl font-bold text-gray-800">Tạo nhân viên mới</h3>
-                <p class="text-sm text-gray-500 mt-1">Giao diện form, chưa gắn xử lý lưu.</p>
+                <p class="text-sm text-gray-500 mt-1">Mã nhân viên sẽ được tạo tự động theo id sau khi lưu.</p>
             </div>
             <a href="{{ route('management.employees.index') }}" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm">
                 <i class="fas fa-arrow-left mr-2"></i>Quay lại

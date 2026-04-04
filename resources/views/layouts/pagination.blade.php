@@ -29,19 +29,26 @@
                     <option value="100" {{ ($filters['per_page'] ?? $paginator->perPage()) == 100 ? 'selected' : '' }}>100</option>
                 </select>
             </form>
-            <div class="flex gap-2">
-                @if(!$paginator->onFirstPage())
-                    <a href="{{ $paginator->previousPageUrl() }}" class="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                        Trước
-                    </a>
-                @endif
-
-                @if($paginator->hasMorePages())
-                    <a href="{{ $paginator->nextPageUrl() }}" class="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                        Sau
-                    </a>
-                @endif
-            </div>
+            <form method="GET" action="{{ $route }}" class="flex items-center gap-2">
+                @foreach($filters as $key => $value)
+                    @if($key !== 'page' && $value !== null && $value !== '')
+                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                    @endif
+                @endforeach
+                <label for="page" class="text-sm text-gray-600">Trang:</label>
+                <select
+                    name="page"
+                    id="page"
+                    onchange="this.form.submit()"
+                    class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                >
+                    @for($page = 1; $page <= $paginator->lastPage(); $page++)
+                        <option value="{{ $page }}" {{ $paginator->currentPage() === $page ? 'selected' : '' }}>
+                            Trang {{ $page }}/{{ $paginator->lastPage() }}
+                        </option>
+                    @endfor
+                </select>
+            </form>
         </div>
     </div>
 @endif
