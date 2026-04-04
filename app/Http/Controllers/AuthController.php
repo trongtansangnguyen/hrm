@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ResetPasswordMail;
 use App\Models\User;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
@@ -91,12 +92,7 @@ class AuthController extends Controller
             ]
         );
 
-        // Gửi email với link reset password
-        // Trong thực tế, bạn nên cấu hình mail và gửi email thật
-        Mail::send('emails.reset-password', ['token' => $token], function($message) use($request){
-            $message->to($request->email);
-            $message->subject('Reset Password');
-        });
+        Mail::to($request->email)->queue(new ResetPasswordMail($token));
 
         return back()->with('success', 'Link đặt lại mật khẩu đã được gửi đến email của bạn!');
     }

@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Management;
 
 use App\Enums\LeaveRequestStatus;
 use App\Http\Controllers\Controller;
+use App\Mail\LeaveApprovedMail;
 use App\Models\Leave;
 use App\Services\DashboardService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class LeaveController extends Controller
 {
@@ -71,6 +74,21 @@ class LeaveController extends Controller
             'status' => LeaveRequestStatus::APPROVED,
             'approved_by' => Auth::id(),
         ]);
+
+        $leave->loadMissing('employee');
+        if (!empty($leave->employee?->email)) {
+            $fromDate = !empty($leave->from_date) ? Carbon::parse($leave->from_date)->format('d/m/Y') : '-';
+            $toDate = !empty($leave->to_date) ? Carbon::parse($leave->to_date)->format('d/m/Y') : '-';
+
+            Mail::to($leave->employee->email)->queue(
+                new LeaveApprovedMail(
+                    $leave->employee->full_name,
+                    $fromDate,
+                    $toDate
+                )
+            );
+        }
+
         $this->dashboardService->clearLeaveCache();
 
         return back()->with('success', 'Đã duyệt đơn nghỉ phép.');

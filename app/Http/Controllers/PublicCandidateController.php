@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Enums\JobPositionStatus;
+use App\Mail\CandidateApplicationReceivedMail;
 use App\Models\Candidate;
 use App\Models\JobPosition;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class PublicCandidateController extends Controller
@@ -53,7 +55,15 @@ class PublicCandidateController extends Controller
             'status' => '1',
         ];
 
-        Candidate::create($data);
+        $candidate = Candidate::create($data);
+
+        $positionTitle = JobPosition::query()
+            ->whereKey($candidate->job_position_id)
+            ->value('title') ?? 'vi tri ung tuyen';
+
+        Mail::to($candidate->email)->queue(
+            new CandidateApplicationReceivedMail($request->full_name, $positionTitle)
+        );
 
         return redirect()->back()->with('success', 'Hồ sơ của bạn đã được gửi thành công!');
     }
