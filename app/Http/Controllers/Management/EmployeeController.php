@@ -31,12 +31,19 @@ class EmployeeController extends Controller
 
         if (!empty($filters['search'])) {
             $search = trim($filters['search']);
-            $query->where(function ($q) use ($search) {
+            $keywords = preg_split('/\s+/', $search) ?: [];
+
+            $query->where(function ($q) use ($search, $keywords) {
                 $q->where('employee_code', 'like', "%{$search}%")
-                    ->orWhere('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('phone', 'like', "%{$search}%");
+                    ->orWhere(function ($nameQuery) use ($keywords) {
+                        foreach ($keywords as $keyword) {
+                            $nameQuery->where(function ($tokenQuery) use ($keyword) {
+                                $tokenQuery->where('first_name', 'like', "%{$keyword}%")
+                                    ->orWhere('last_name', 'like', "%{$keyword}%");
+                            });
+                        }
+                    });
             });
         }
 
