@@ -13,7 +13,7 @@
         </div>
         <div id="job-filters-content" class="mt-2 p-6">
             <form method="GET" action="{{ route('management.jobbatch.index') }}" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                     <div>
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Tìm kiếm</label>
                         <input
@@ -63,6 +63,28 @@
                 </div>
             </form>
         </div>
+
+                        <div>
+                            <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">Từ ngày</label>
+                            <input
+                                type="date"
+                                name="date_from"
+                                id="date_from"
+                                value="{{ $filters['date_from'] ?? '' }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                            >
+                        </div>
+
+                        <div>
+                            <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">Đến ngày</label>
+                            <input
+                                type="date"
+                                name="date_to"
+                                id="date_to"
+                                value="{{ $filters['date_to'] ?? '' }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                            >
+                        </div>
     </div>
 
     <div class="bg-white rounded-lg shadow overflow-hidden">

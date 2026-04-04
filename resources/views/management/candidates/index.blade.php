@@ -13,7 +13,7 @@
         </div>
         <div id="candidate-filters-content" class="mt-2 p-6">
             <form method="GET" action="{{ route('management.candidates.index') }}" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                     <div>
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Tìm kiếm</label>
                         <input
@@ -48,15 +48,6 @@
                             <option value="rejected" {{ ($filters['status'] ?? '') === 'rejected' ? 'selected' : '' }}>Loại</option>
                         </select>
                     </div>
-
-                    <div>
-                        <label for="per_page" class="block text-sm font-medium text-gray-700 mb-1">Hiển thị</label>
-                        <select name="per_page" id="per_page" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
-                            <option value="10" {{ ($filters['per_page'] ?? 10) == 10 ? 'selected' : '' }}>10/trang</option>
-                            <option value="20" {{ ($filters['per_page'] ?? 10) == 20 ? 'selected' : '' }}>20/trang</option>
-                            <option value="50" {{ ($filters['per_page'] ?? 10) == 50 ? 'selected' : '' }}>50/trang</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div class="flex justify-between items-center">
@@ -74,6 +65,28 @@
     </div>
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <div class="overflow-x-auto">
+
+                        <div>
+                            <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">Từ ngày</label>
+                            <input
+                                type="date"
+                                name="date_from"
+                                id="date_from"
+                                value="{{ $filters['date_from'] ?? '' }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                            >
+                        </div>
+
+                        <div>
+                            <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">Đến ngày</label>
+                            <input
+                                type="date"
+                                name="date_to"
+                                id="date_to"
+                                value="{{ $filters['date_to'] ?? '' }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                            >
+                        </div>
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
