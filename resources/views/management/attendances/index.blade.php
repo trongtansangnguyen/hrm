@@ -97,7 +97,7 @@
                             $meta = $statusColors[$attendance->status->value] ?? $statusColors[3];
                         @endphp
                         <tr>
-                            <td class="px-4 py-3 text-sm text-gray-900">{{ $loop->iteration }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900">{{ $attendances->firstItem() ? $attendances->firstItem() + $loop->index : $loop->iteration }}</td>
                             <td class="px-4 py-3 text-sm text-gray-700">{{ $attendance->date?->format('d/m/Y') }}</td>
                             <td class="px-4 py-3 text-sm text-gray-900">
                                 {{ $attendance->employee?->full_name ?? '-' }}

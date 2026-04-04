@@ -46,6 +46,10 @@ class AttendanceController extends Controller
             return back()->with('error', 'Tài khoản chưa liên kết hồ sơ nhân viên.');
         }
 
+        if (!in_array($employee->status, [EmployeeStatus::WORKING, EmployeeStatus::ON_DUTY], true)) {
+            return back()->with('error', 'Trạng thái nhân viên hiện tại không thể thực hiện chấm công.');
+        }
+
         $today = Carbon::today();
         $now = now();
 
@@ -91,6 +95,10 @@ class AttendanceController extends Controller
 
         if (!$employee?->id) {
             return back()->with('error', 'Tài khoản chưa liên kết hồ sơ nhân viên.');
+        }
+
+        if (!in_array($employee->status, [EmployeeStatus::WORKING, EmployeeStatus::ON_DUTY], true)) {
+            return back()->with('error', 'Trạng thái nhân viên hiện tại không thể thực hiện chấm công.');
         }
 
         $attendance = Attendance::query()
